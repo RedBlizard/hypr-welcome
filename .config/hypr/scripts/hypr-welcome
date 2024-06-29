@@ -23,11 +23,10 @@ grub_rebuild_script="$HOME/.config/hypr/scripts/grub_rebuild.sh"
 kill_script="$HOME/.config/hypr/scripts/kill-hypr-welcome"
 flag_path="$HOME/.config/hypr/flags/welcome_flag"
 
-# Function to check for updates
+# Function to check for updates in a specific repository
 check_updates() {
-    cd "$HOME/hyprland-dots/hypr-welcome" || { echo "Failed to change to dotfiles directory." >&2; exit 1; }
-    cd "$HOME/hyprland-dots/hypr-waybar" || { echo "Failed to change to dotfiles directory." >&2; exit 1; }
-    cd "$HOME/hyprland-dots/Hyprland-blizz" || { echo "Failed to change to dotfiles directory." >&2; exit 1; }
+    local repo_dir="$1"
+    cd "$repo_dir" || { echo "Failed to change to dotfiles directory: $repo_dir." >&2; return 1; }
     git fetch origin main
     local commits_behind=$(git rev-list --count HEAD..origin/main)
     if [ "$commits_behind" -gt 0 ]; then
@@ -37,8 +36,25 @@ check_updates() {
     fi
 }
 
-# Check for updates
-if check_updates; then
+# Check for updates in each repository
+update_hypr_welcome=false
+update_hypr_waybar=false
+update_hypr_blizz=false
+
+if check_updates "$HOME/hyprland-dots/hypr-welcome"; then
+    update_hypr_welcome=true
+fi
+
+if check_updates "$HOME/hyprland-dots/hypr-waybar"; then
+    update_hypr_waybar=true
+fi
+
+if check_updates "$HOME/hyprland-dots/Hyprland-blizz"; then
+    update_hypr_blizz=true
+fi
+
+# Determine the update status message
+if $update_hypr_blizz; then
     update_status="<span foreground='#FF7F7F'>  Update Hyprland</span>"
 else
     update_status="  Update Hyprland"
