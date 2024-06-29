@@ -54,9 +54,14 @@ for folder in "${folders[@]}"; do
     fi
 done
 
+
 # Ensure the hyprland-dots directory exists
 DOTFILES_DIR="$HOME/hyprland-dots"
 mkdir -p "$DOTFILES_DIR"
+
+# Ensure the script is in the correct directory
+# Change to the dotfiles directory
+cd "$HOME/Hyprland-dots" || { show_message "Failed to change to dotfiles directory." "$RED"; exit 1; }
 
 # Repositories to clone
 REPOS=(
@@ -64,6 +69,9 @@ REPOS=(
     "https://github.com/RedBlizard/hypr-welcome.git"
     "https://github.com/RedBlizard/hypr-waybar.git"
 )
+
+# Set GIT_DISCOVERY_ACROSS_FILESYSTEM if needed
+export GIT_DISCOVERY_ACROSS_FILESYSTEM=1
 
 # Banner
 show_message() {
@@ -137,7 +145,7 @@ else
     exit 0
 fi
 
-# Enable hypridle.service if not already enabled
+ Enable hypridle.service if not already enabled
 if ! systemctl --user is-enabled hypridle.service >/dev/null 2>&1; then
     systemctl --user enable --now hypridle.service
 fi
@@ -146,25 +154,26 @@ fi
 cd "$HOME" || { echo 'Failed to change directory to home directory.'; exit 1; }
 
 # Cleanup
-rm -rf "$HOME/README.md"
-rm -rf "$HOME/sddm-images"
-rm -rf "$HOME/LICENSE"
-rm -rf "$HOME/sddm.conf"
+rm -rf $HOME/README.md
+rm -rf $HOME/sddm-images
+rm -rf $HOME/LICENSE
+rm -rf $HOME/sddm.conf
 
 # Change to the scripts directory
 cd "$HOME/.config/hypr/scripts" || { echo "Failed to change to the scripts directory." >&2; exit 1; }
 
+# Function to check if all required symlinks exist
 check_symlinks() {
     local symlinks=("hypr-welcome" "hypr-eos-kill-yad-zombies" "hypr_check_updates")
     local all_exist=true
-
+    
     for symlink in "${symlinks[@]}"; do
         if [ ! -L "/usr/bin/$symlink" ]; then
             all_exist=false
             break
         fi
     done
-
+    
     if $all_exist; then
         echo "All required symlinks exist."
         return 0
@@ -174,21 +183,50 @@ check_symlinks() {
     fi
 }
 
+# Check if the symlinks exist
 if ! check_symlinks; then
     echo "Creating missing symlinks..."
-
+    
+    # Change to the scripts directory
     cd "$HOME/.config/hypr/scripts" || { echo "Failed to change to the scripts directory." >&2; exit 1; }
 
-    sudo ln -sf "$HOME/.config/hypr/scripts/hypr-welcome" "/usr/bin/hypr-welcome"
-    sudo ln -sf "$HOME/.config/hypr/scripts/hypr-eos-kill-yad-zombies" "/usr/bin/hypr-eos-kill-yad-zombies"
-    sudo ln -sf "$HOME/.config/hypr/scripts/hypr_check_updates.sh" "/usr/bin/hypr_check_updates"
+    # Path to your welcome script
+    welcome_script="$HOME/.config/hypr/scripts/hypr-welcome"
+
+    # Path to the symlink in /usr/bin
+    symlink="/usr/bin/hypr-welcome"
+
+    # Create new symlink
+    sudo ln -sf "$welcome_script" "$symlink"
+
+
+    # Path to your kill script
+    kill_script="$HOME/.config/hypr/scripts/hypr-eos-kill-yad-zombies"
+
+    # Path to the symlink in /usr/bin
+    symlink="/usr/bin/hypr-eos-kill-yad-zombies"
+
+    # Create new symlink
+    sudo ln -sf "$kill_script" "$symlink"
+
+
+    # Path to your update script
+    update_script="$HOME/.config/hypr/scripts/hypr_check_updates.sh"
+
+    # Path to the symlink in /usr/bin
+    symlink="/usr/bin/hypr_check_updates"
+
+    # Create new symlink
+    sudo ln -sf "$update_script" "$symlink"
 fi
 
+# Change to the apps directory
 cd "$HOME/.config/hypr/apps" || { echo "Failed to change to the apps directory." >&2; exit 1; }
 
+# Function to check if the required symlink exists
 check_settings_symlink() {
     local symlink="hypr-settings"
-
+    
     if [ -L "/usr/bin/$symlink" ]; then
         echo "Settings symlink exists."
         return 0
@@ -198,9 +236,20 @@ check_settings_symlink() {
     fi
 }
 
+# Check if the settings symlink exists
 if ! check_settings_symlink; then
     echo "Creating missing settings symlink..."
-    sudo ln -sf "$HOME/.config/hypr/apps/AppRun" "/usr/bin/hypr-settings"
+    
+    # Path to your settings script
+    settings_script="$HOME/.config/hypr/apps/AppRun"
+
+    # Path to the symlink in /usr/bin
+    symlink="/usr/bin/hypr-settings"
+
+    # Create new symlink
+    sudo ln -sf "$settings_script" "$symlink"
 fi
 
-notify-send "We are done! Enjoy your updated Hyprland experience."
+# Notify user about the end of the script
+notify-send "We are done enjoy your updated Hyprland experience"
+
