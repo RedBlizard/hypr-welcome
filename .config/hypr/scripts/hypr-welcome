@@ -69,13 +69,13 @@ yad --title="Welcome" \
             --field=\"    Hyprland-blizz-installation:FBTN\" \"$HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/RedBlizard/hyprland-installation\" \
             --button=\"   Back to main menu\"'" \
         --field="<span foreground='white'>   </span>                                        :LBL" "" \
-        --field="<span font_desc='CustomFont 12'></span> Wiki Hyprland:FBTN" "$HOME/.config/hypr/scripts/welcome_browser.sh https://wiki.hyprland.org/" \
+        --field="<span font_desc='CustomFont 10'></span> Wiki Hyprland:FBTN" "$HOME/.config/hypr/scripts/welcome_browser.sh https://wiki.hyprland.org/" \
         --field="Waybar Wiki:FBTN" "$HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/Alexays/Waybar/wiki" \
         --field="Discovery:FBTN" "$HOME/.config/hypr/scripts/welcome_browser.sh https://discovery.endeavouros.com/" \
         --field="Arch Wiki:FBTN" "$HOME/.config/hypr/scripts/welcome_browser.sh https://wiki.archlinux.org/" \
         --field="<span foreground='white'>   </span>                                        :LBL" "" \
         --field="<span foreground='white'>   </span>                                        :LBL" "" \
-        --field="<span font_desc='CustomFont 12'></span>  Arch News:FBTN" "bash $arch_news_script" \
+        --field="<span font_desc='CustomFont 10'></span>  Arch News:FBTN" "bash $arch_news_script" \
     --tab="Assistant" \
         --form \
         --columns=3 \
@@ -98,13 +98,13 @@ yad --title="Welcome" \
             --field=\"󱌢  Rebuild grub :FBTN\" \"bash $grub_rebuild_script\" \
             --button=\"   Back to main menu\"'" \
         --field="<span foreground='white'>   </span>                                        :LBL" "" \
-        --field="<span font_desc='CustomFont 12'></span>  EndeavourOS:FBTN" "$HOME/.config/hypr/scripts/welcome_browser.sh https://endeavouros.com/" \
+        --field="<span font_desc='CustomFont 10'></span>  EndeavourOS:FBTN" "$HOME/.config/hypr/scripts/welcome_browser.sh https://endeavouros.com/" \
         --field="Update Mirrors:FBTN" "bash $update_mirrors_script" \
         --field="Rank Mirrors:FBTN" "bash $eos_rankmirrors_script" \
         --field="Forum:FBTN" "$HOME/.config/hypr/scripts/welcome_browser.sh https://forum.endeavouros.com/" \
         --field="<span foreground='white'>   </span>                                        :LBL" "" \
         --field="<span foreground='white'>   </span>                                        :LBL" "" \
-        --field="<span font_desc='CustomFont 12'></span>  Trouble Shoot Logs:FBTN" "bash $eos_log_tool_script" \
+        --field="<span font_desc='CustomFont 10'></span>  Trouble Shoot Logs:FBTN" "bash $eos_log_tool_script" \
     --tab="Hardware and Drivers" \
         --form \
         --columns=3 \
@@ -127,7 +127,7 @@ yad --title="Welcome" \
         --field="Maintenance:FBTN" "bash $cleanup_script" \
         --field="<span foreground='white'>   </span>                                        :LBL" "" \
         --field="<span foreground='white'>   </span>                                        :LBL" "" \
-        --field="<span font_desc='CustomFont 12'></span>  Hide me forever ...:FBTN" "bash $kill_script" \
+        --field="<span font_desc='CustomFont 10'></span>  Hide me forever ...:FBTN" "bash $kill_script" \
     --button-layout=end \
     --no-cancel \
     --no-focus \
