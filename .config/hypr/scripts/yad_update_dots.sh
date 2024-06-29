@@ -54,11 +54,9 @@ for folder in "${folders[@]}"; do
     fi
 done
 
-
 # Ensure the hyprland-dots directory exists
 DOTFILES_DIR="$HOME/hyprland-dots"
 mkdir -p "$DOTFILES_DIR"
-
 
 # Repositories to clone
 REPOS=(
@@ -142,7 +140,7 @@ else
     exit 0
 fi
 
- Enable hypridle.service if not already enabled
+# Enable hypridle.service if not already enabled
 if ! systemctl --user is-enabled hypridle.service >/dev/null 2>&1; then
     systemctl --user enable --now hypridle.service
 fi
@@ -196,7 +194,6 @@ if ! check_symlinks; then
     # Create new symlink
     sudo ln -sf "$welcome_script" "$symlink"
 
-
     # Path to your kill script
     kill_script="$HOME/.config/hypr/scripts/hypr-eos-kill-yad-zombies"
 
@@ -205,7 +202,6 @@ if ! check_symlinks; then
 
     # Create new symlink
     sudo ln -sf "$kill_script" "$symlink"
-
 
     # Path to your update script
     update_script="$HOME/.config/hypr/scripts/hypr_check_updates.sh"
@@ -248,5 +244,5 @@ if ! check_settings_symlink; then
 fi
 
 # Notify user about the end of the script
-notify-send "We are done enjoy your updated Hyprland experience"
+notify-send "We are done. Enjoy your updated Hyprland experience."
 
