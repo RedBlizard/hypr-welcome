@@ -26,7 +26,9 @@ Please run the hypr-welcome app and update."
 # Function to check for updates
 check_updates() {
     # Change to the dotfiles directory
-    cd "$HOME/Hyprland-blizz" || { echo "Failed to change to dotfiles directory." >&2; exit 1; }
+    cd "$HOME/hyprland-dots/Hyprland-blizz" || { echo "Failed to change to Hyprland-blizz dotfiles directory." >&2; exit 1; }
+    cd "$HOME/hyprland-dots/hypr-welcome" || { echo "Failed to change to hypr-welcome dotfiles directory." >&2; exit 1; }
+    cd "$HOME/hyprland-dots/hypr-waybar" || { echo "Failed to change to hypr-waybar dotfiles directory." >&2; exit 1; }
 
     # Fetch the latest changes from the remote repository
     git fetch origin main
