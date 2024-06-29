@@ -25,7 +25,9 @@ flag_path="$HOME/.config/hypr/flags/welcome_flag"
 
 # Function to check for updates
 check_updates() {
-    cd "$HOME/Hyprland-blizz" || { echo "Failed to change to dotfiles directory." >&2; exit 1; }
+    cd "$HOME/hyprland-dots/hypr-welcome" || { echo "Failed to change to dotfiles directory." >&2; exit 1; }
+    cd "$HOME/hyprland-dots/hypr-waybar" || { echo "Failed to change to dotfiles directory." >&2; exit 1; }
+    cd "$HOME/hyprland-dots/Hyprland-blizz" || { echo "Failed to change to dotfiles directory." >&2; exit 1; }
     git fetch origin main
     local commits_behind=$(git rev-list --count HEAD..origin/main)
     if [ "$commits_behind" -gt 0 ]; then
