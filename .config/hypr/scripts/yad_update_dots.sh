@@ -59,9 +59,6 @@ done
 DOTFILES_DIR="$HOME/hyprland-dots"
 mkdir -p "$DOTFILES_DIR"
 
-# Ensure the script is in the correct directory
-# Change to the dotfiles directory
-cd "$HOME/Hyprland-dots" || { show_message "Failed to change to dotfiles directory." "$RED"; exit 1; }
 
 # Repositories to clone
 REPOS=(
