@@ -19,7 +19,7 @@ Please run the hypr-welcome app and update."
         formatted_message="$repo_name: $3"  # Default message for other urgency levels
     fi
 
-    notify-send --urgency="$urgency" "$formatted_message"
+    notify-send --urgency="$urgency" "Hyprland Updates" "$formatted_message"
 }
 
 # Function to check for updates in a specific repository
