@@ -60,7 +60,7 @@ fi
 
 # Determine the update status message
 if $update_hypr_blizz || $update_hypr_welcome || $update_hypr_waybar; then
-    update_status="  Hyprland updates"
+    update_status="<span foreground='#FF7F7F'>  Hyprland updates</span>"
 else
     update_status="  No hyprland updates"
 fi
@@ -165,7 +165,7 @@ yad --title="Welcome" \
             --field=\"   Hard drives | USB devices information:FBTN\" \"bash $HOME/.config/hypr/scripts/device_info.sh\" \
             --button=\"   Back to main menu\"'" \
         --field="<span foreground='white'> </span>                                        :LBL" "" \
-        --field="<span foreground='#FF7F7F'>$update_status</span>:FBTN" "bash \"$update_script\"" \
+        --field="$update_status:FBTN" "bash \"$update_script\"" \
         --field="Switch Your Waybar:FBTN" "bash $HOME/.config/hypr/scripts/waybar_switch.sh" \
         --field="Settings:FBTN" "bash $HOME/.config/hypr/scripts/settings.sh" \
         --field="Maintenance:FBTN" "bash $HOME/.config/hypr/scripts/cleanup.sh" \
