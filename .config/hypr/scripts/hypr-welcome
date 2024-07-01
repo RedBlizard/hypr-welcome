@@ -60,9 +60,9 @@ fi
 
 # Determine the update status message
 if $update_hypr_blizz || $update_hypr_welcome || $update_hypr_waybar; then
-    update_status="Updates Available"
+    update_status="  Updates Available"
 else
-    update_status="No Updates Available"
+    update_status="  No Updates Available"
 fi
 
 # Echo to check the update status (for debugging)
