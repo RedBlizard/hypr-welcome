@@ -28,6 +28,17 @@ hypr_blizz_repo="$HOME/hyprland-dots/Hyprland-blizz"
 hypr_welcome_repo="$HOME/hyprland-dots/hypr-welcome"
 hypr_waybar_repo="$HOME/hyprland-dots/hypr-waybar"
 
+# Function to check network connectivity
+check_network() {
+    wget -q --spider http://google.com
+    if [ $? -eq 0 ]; then
+        return 0
+    else
+        echo "Network connection required. Please check your internet connection." >&2
+        return 1
+    fi
+}
+
 # Function to check for updates in a specific repository
 check_updates() {
     local repo_dir="$1"
