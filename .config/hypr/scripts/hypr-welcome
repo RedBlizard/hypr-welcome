@@ -149,7 +149,7 @@ yad --title="Welcome" \
         --field="Forum:FBTN" "bash $HOME/.config/hypr/scripts/welcome_browser.sh https://forum.endeavouros.com/" \
         --field="<span foreground='white'> </span>                                        :LBL" "" \
         --field="<span foreground='white'> </span>                                        :LBL" "" \
-        --field="<span font_desc='CustomFont 10'></span> Trouble Shoot Logs:FBTN" "bash $HOME/.config/hypr/scripts/eos-log-tool.sh" \
+        --field="<span font_desc='CustomFont 10'> </span> Trouble Shoot Logs:FBTN" "bash $HOME/.config/hypr/scripts/eos-log-tool.sh" \
     --tab="Hardware and Drivers" \
         --form \
         --columns=3 \
