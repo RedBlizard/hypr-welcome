@@ -93,7 +93,7 @@ yad --title="Welcome" \
     --tab="System updates" \
         --form \
         --columns=3 \
-        --field="<b>   System updates</b>:FBTN" "bash -c 'yad --notebook --tab=\"System updates\" --form \
+        --field="<b><span font_desc='CustomFont 10'></span>  System updates</b>:FBTN" "bash -c 'yad --notebook --tab=\"System updates\" --form \
             --geometry=900x410+100+100 \
             --columns=3 \
             --image=\"$HOME/.config/hypr/imgs/hypr-welcome.png\" \
@@ -115,7 +115,7 @@ yad --title="Welcome" \
     --tab="Assistant" \
         --form \
         --columns=3 \
-        --field="<b>󱌢   Assistant</b>:FBTN" "bash -c 'yad --notebook --tab=\"Assistant\" --form \
+        --field="<b><span font_desc='CustomFont 10'>󱌢</span>   Assistant</b>:FBTN" "bash -c 'yad --notebook --tab=\"Assistant\" --form \
             --geometry=900x410+100+100 \
             --columns=3 \
             --image=\"$HOME/.config/hypr/imgs/hypr-welcome.png\" \
@@ -153,7 +153,7 @@ yad --title="Welcome" \
     --tab="Hardware and Drivers" \
         --form \
         --columns=3 \
-        --field="<b>󰦬   Hardware and Drivers</b>:FBTN" "bash -c 'yad --notebook --tab=\"Hardware and Drivers\" --form \
+        --field="<b><span font_desc='CustomFont 10'>󰦬</span>   Hardware and Drivers</b>:FBTN" "bash -c 'yad --notebook --tab=\"Hardware and Drivers\" --form \
             --geometry=900x410+100+100 \
             --columns=3 \
             --image=\"$HOME/.config/hypr/imgs/hypr-welcome.png\" \
