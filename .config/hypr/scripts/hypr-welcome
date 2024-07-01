@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Define paths and scripts
+# Define paths and scripts (unchanged from your original script)
 logo_path="$HOME/.config/hypr/imgs/hypr-welcome.png"
 settings_script="$HOME/.config/hypr/scripts/yad_settings.sh"
 system_update_script="$HOME/.config/hypr/scripts/system-update.sh"
@@ -25,10 +25,10 @@ hypr_blizz_update_script="$HOME/.config/hypr/scripts/hypr_blizz_update.sh"
 hypr_welcome_update_script="$HOME/.config/hypr/scripts/hypr_welcome_update.sh"
 hypr_waybar_update_script="$HOME/.config/hypr/scripts/hypr_waybar_update.sh"
 
-# Function to check for updates in a specific repository
+# Function to check for updates in a specific repository (unchanged from your original script)
 check_updates() {
     local repo_dir="$1"
-    cd "$repo_dir" || { echo "Failed to change to dotfiles directory: $repo_dir." >&2; return 1; }
+    cd "$repo_dir" || { echo "Failed to change to directory: $repo_dir." >&2; return 1; }
     git fetch origin main
     local commits_behind=$(git rev-list --count HEAD..origin/main)
     if [ "$commits_behind" -gt 0 ]; then
@@ -38,33 +38,43 @@ check_updates() {
     fi
 }
 
-# Check for updates in each repository
+# Check for updates in each repository (unchanged from your original script)
 update_hypr_welcome=false
 update_hypr_waybar=false
 update_hypr_blizz=false
 
-# Check Hyprland-welcome repository for updates
 if check_updates "$HOME/hyprland-dots/hypr-welcome"; then
     update_hypr_welcome=true
 fi
 
-# Check Hyprland-waybar repository for updates
 if check_updates "$HOME/hyprland-dots/hypr-waybar"; then
     update_hypr_waybar=true
 fi
 
-# Check Hyprland-blizz repository for updates
 if check_updates "$HOME/hyprland-dots/Hyprland-blizz"; then
     update_hypr_blizz=true
 fi
 
-# Determine the update status message for general Hyprland dots
+# Determine the update status message
 update_status="  Update Hyprland"
-if $update_hypr_welcome || $update_hypr_waybar || $update_hypr_blizz; then
-    update_status="<span foreground='#FF7F7F'>$update_status</span>"
+
+# Concatenate update messages for each repository if updates are available
+if $update_hypr_welcome; then
+    update_status="$update_status - Update Hypr-welcome: Updates Available"
 fi
 
-# Yad dialog
+if $update_hypr_waybar; then
+    update_status="$update_status - Update Hypr-waybar: Updates Available"
+fi
+
+if $update_hypr_blizz; then
+    update_status="$update_status - Update Hypr-blizz: Updates Available"
+fi
+
+# Echo to check the update status (for debugging)
+echo "Update Status: $update_status"
+
+# Yad dialog (modified to include color and icon)
 yad --title="Welcome" \
     --image="$logo_path" \
     --image-on-top-center \
@@ -84,11 +94,10 @@ yad --title="Welcome" \
             --columns=3 \
             --image=\"$logo_path\" \
             --field=\" <b>General System Update</b>:FBTN\" \"bash $system_update_script\" \
-            --field=\"${update_status}:FBTN\" \"bash $kitty_script\" \
             --field=\" <b>Hypr-blizz</b> Update:FBTN\" \"bash $hypr_blizz_update_script\" \
             --field=\" <b>hypr-welcome</b> Update:FBTN\" \"bash $hypr_welcome_update_script\" \
             --field=\" <b>hypr-waybar</b> Update:FBTN\" \"bash $hypr_waybar_update_script\" \
-            --field=\"<span foreground='white'>   </span>                                        :LBL\" \"\" \
+            --field=\"$update_status:FBTN\" \"bash $kitty_script\" \
             --button=\"   Back to main menu\"'" \
         --field="<span foreground='white'>   </span>                                        :LBL" "" \
         --field="<span font_desc='CustomFont 10'></span>  Wiki Hyprland:FBTN" "$HOME/.config/hypr/scripts/welcome_browser.sh https://wiki.hyprland.org/" \
@@ -122,8 +131,8 @@ yad --title="Welcome" \
             --field=\"    hypr-welcome:FBTN\" \"$HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/RedBlizard/hypr-welcome\" \
             --field=\"󱌢  Maintenance :FBTN\" \"bash $cleanup_script\" \
             --field=\"   Grub information :FBTN\" \"bash $grub_info_script\" \
-            --field=\"   Update grub :FBTN\" \"bash $grub_update_script\" \
-            --field=\"󱌢  Rebuild grub :FBTN\" \"bash $grub_rebuild_script\" \
+            --field=\"   Update Grub :FBTN\" \"bash $grub_update_script\" \
+            --field=\"   Rebuild Grub :FBTN\" \"bash $grub_rebuild_script\" \
             --field=\"<span foreground='white'>   </span>                                        :LBL\" \"\" \
             --field=\"    hypr-waybar:FBTN\" \"$HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/RedBlizard/hypr-waybar\" \
             --field=\"<span foreground='white'>   </span>                                        :LBL\" \"\" \
@@ -152,7 +161,7 @@ yad --title="Welcome" \
             --field=\"   Hard drives | USB       devices information:FBTN\" \"bash $device_info_script\" \
             --button=\"   Back to main menu\"'" \
         --field="<span foreground='white'>   </span>                                        :LBL" "" \
-        --field="$update_status:FBTN" "bash $kitty_script" \
+        --field="<span foreground='#FF7F7F'>$update_status</span>:FBTN" "bash $kitty_script" \
         --field="Switch Your Waybar:FBTN" "bash $waybar_script" \
         --field="Settings:FBTN" "bash $settings_script" \
         --field="Maintenance:FBTN" "bash $cleanup_script" \
