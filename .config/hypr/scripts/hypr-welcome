@@ -110,7 +110,7 @@ create_yad_dialog() {
                 --columns=3 \
                 --image=\"$logo_path\" \
                 --field=\" <b>System Update</b>:FBTN\" \"bash $system_update_script\" \
-                --field=\" <b>Overall</b> Update:FBTN\" \"bash $kitty_script\" \
+                --field=\" <b>Full hypr</b> Update:FBTN\" \"bash $kitty_script\" \
                 --field=\" <b>Hypr-blizz</b> Update:FBTN\" \"bash $hypr_blizz_update_script\" \
                 --field=\" <b>hypr-welcome</b> Update:FBTN\" \"bash $hypr_welcome_update_script\" \
                 --field=\" <b>hypr-waybar</b> Update:FBTN\" \"bash $hypr_waybar_update_script\" \
