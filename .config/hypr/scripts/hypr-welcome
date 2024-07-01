@@ -90,7 +90,7 @@ yad --title="Welcome" \
             --field=\"󱍸  <b>hypr-welcome</b> Update/Ignore:FBTN\" \"bash $hypr_welcome_update_script\" \
             --field=\"󱍸  <b>hypr-waybar</b> Update/Ignore:FBTN\" \"bash $hypr_waybar_update_script\" \
             --field=\"<span foreground='white'>   </span>                                        :LBL\" \"\" \
-            --button=\"  Back to main menu\"'" \
+            --button=\"   Back to main menu\"'" \
         --field="<span foreground='white'>   </span>                                        :LBL" "" \
         --field="<span font_desc='CustomFont 10'></span>  Wiki Hyprland:FBTN" "$HOME/.config/hypr/scripts/welcome_browser.sh https://wiki.hyprland.org/" \
         --field="Waybar Wiki:FBTN" "$HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/Alexays/Waybar/wiki" \
@@ -151,7 +151,7 @@ yad --title="Welcome" \
             --field=\"   Nvidia Gpu information:FBTN\" \"bash $nvidia_info_script\" \
             --field=\"   Audio Card information:FBTN\" \"bash $audio_device_info_script\" \
             --field=\"   Hard drives | USB       devices information:FBTN\" \"bash $device_info_script\" \
-            --button=\"  Back to main menu\"'" \
+            --button=\"   Back to main menu\"'" \
         --field="<span foreground='white'>   </span>                                        :LBL" "" \
         --field="$update_status:FBTN" "bash $kitty_script" \
         --field="Switch Your Waybar:FBTN" "bash $waybar_script" \
