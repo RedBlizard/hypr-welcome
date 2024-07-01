@@ -58,11 +58,10 @@ if check_updates "$HOME/hyprland-dots/Hyprland-blizz"; then
     update_hypr_blizz=true
 fi
 
-# Determine the update status message
+# Determine the update status message for general Hyprland dots
+update_status="  Update Hyprland"
 if $update_hypr_welcome || $update_hypr_waybar || $update_hypr_blizz; then
-    update_status="<span foreground='#FF7F7F'>  Update Hyprland</span>"
-else
-    update_status="  Update Hyprland"
+    update_status="<span foreground='#FF7F7F'>$update_status</span>"
 fi
 
 # Yad dialog
@@ -84,11 +83,11 @@ yad --title="Welcome" \
             --geometry=900x410+100+100 \
             --columns=3 \
             --image=\"$logo_path\" \
-            --field=\"  <b>General System Update</b>:FBTN\" \"bash $system_update_script\" \
-            --field=\"󱍸  <b>Update Hyprland Dots</b>:FBTN\" \"bash $kitty_script\" \
-            --field=\"󱍸  <b>Hyprland-blizz</b> Update/Ignore:FBTN\" \"bash $hypr_blizz_update_script\" \
-            --field=\"󱍸  <b>hypr-welcome</b> Update/Ignore:FBTN\" \"bash $hypr_welcome_update_script\" \
-            --field=\"󱍸  <b>hypr-waybar</b> Update/Ignore:FBTN\" \"bash $hypr_waybar_update_script\" \
+            --field=\" <b>General System Update</b>:FBTN\" \"bash $system_update_script\" \
+            --field=\"${update_status}:FBTN\" \"bash $kitty_script\" \
+            --field=\" <b>Hypr-blizz</b> Update:FBTN\" \"bash $hypr_blizz_update_script\" \
+            --field=\" <b>hypr-welcome</b> Update:FBTN\" \"bash $hypr_welcome_update_script\" \
+            --field=\" <b>hypr-waybar</b> Update:FBTN\" \"bash $hypr_waybar_update_script\" \
             --field=\"<span foreground='white'>   </span>                                        :LBL\" \"\" \
             --button=\"   Back to main menu\"'" \
         --field="<span foreground='white'>   </span>                                        :LBL" "" \
