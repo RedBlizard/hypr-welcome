@@ -160,9 +160,9 @@ yad --title="Welcome" \
             --image-on-top-center \
             --field=\"   Cpu information:FBTN\" \"bash $HOME/.config/hypr/scripts/cpu_info.sh\" \
             --field=\"  Memory information:FBTN\" \"bash $HOME/.config/hypr/scripts/memory_info.sh\" \
-            --field=\"   Gpu information:FBTN\" \"bash $HOME/.config/hypr/scripts/gpu_info.sh\" \
-            --field=\"   Nvidia Gpu information:FBTN\" \"bash $HOME/.config/hypr/scripts/nvidia_info.sh\" \
-            --field=\"   Audio Card information:FBTN\" \"bash $HOME/.config/hypr/scripts/audio_device_info.sh\" \
+            --field=\"   Gpu information:FBTN\" \"bash $HOME/.config/hypr/scripts/Gpu_info.sh\" \
+            --field=\"   Nvidia Gpu information:FBTN\" \"bash $HOME/.config/hypr/scripts/Nvidia_gpu_info.sh\" \
+            --field=\"   Audio Card information:FBTN\" \"bash $HOME/.config/hypr/scripts/Audio_device_info.sh\" \
             --field=\"   Hard drives | USB devices information:FBTN\" \"bash $HOME/.config/hypr/scripts/device_info.sh\" \
             --button=\"   Back to main menu\"'" \
         --field="<span foreground='white'> </span>                                        :LBL" "" \
