@@ -98,7 +98,7 @@ create_yad_dialog() {
         --text-align=center \
         --geometry=900x410+800+200 \
         --width=900 \
-        --height=400 \
+        --height=410 \
         --fixed \
         --no-buttons \
         --tabs-position=top \
@@ -109,8 +109,8 @@ create_yad_dialog() {
                 --geometry=900x410+100+100 \
                 --columns=3 \
                 --image=\"$logo_path\" \
-                --field=\" <b>General System Update</b>:FBTN\" \"bash $system_update_script\" \
-                --field=\" <b>Hyprland Overall</b> Update:FBTN\" \"bash $kitty_script\" \
+                --field=\" <b>System Update</b>:FBTN\" \"bash $system_update_script\" \
+                --field=\" <b>Overall</b> Update:FBTN\" \"bash $kitty_script\" \
                 --field=\" <b>Hypr-blizz</b> Update:FBTN\" \"bash $hypr_blizz_update_script\" \
                 --field=\" <b>hypr-welcome</b> Update:FBTN\" \"bash $hypr_welcome_update_script\" \
                 --field=\" <b>hypr-waybar</b> Update:FBTN\" \"bash $hypr_waybar_update_script\" \
@@ -132,16 +132,16 @@ create_yad_dialog() {
                 --columns=3 \
                 --image=\"$logo_path\" \
                 --image-on-top-center \
-                --field=\"   Update the system:FBTN\" \"bash $system_update_script\" \
+                --field=\"   System update:FBTN\" \"bash $system_update_script\" \
                 --field=\"󱍸   Update Mirrors:FBTN\" \"bash $update_mirrors_script\" \
                 --field=\"󱍸   Rank Mirrors:FBTN\" \"bash $eos_rankmirrors_script\" \
-                --field=\"   Trouble Shoot Logs:FBTN\" \"bash $eos_log_tool_script\" \
+                --field=\"   System Logs:FBTN\" \"bash $eos_log_tool_script\" \
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
-                --field=\"   Endeavouros-hyprland:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/rudy-in/endeavouros-hyprland\" \
-                --field=\"   Hyprland-installation:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/RedBlizard/hyprland-installation\" \
-                --field=\"󰖟   Browse all Arch packages:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://archlinux.org/packages/\" \
-                --field=\"󰖟   Browse all Aur packages:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://aur.archlinux.org/packages/\" \
-                --field=\"󰖟   List of applications:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://wiki.archlinux.org/title/List_of_applications/\" \
+                --field=\"   Hyprland:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/rudy-in/endeavouros-hyprland\" \
+                --field=\"   Installation:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/RedBlizard/hyprland-installation\" \
+                --field=\"󰖟    All Arch packages:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://archlinux.org/packages/\" \
+                --field=\"󰖟    All Aur packages:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://aur.archlinux.org/packages/\" \
+                --field=\"󰖟    All applications:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://wiki.archlinux.org/title/List_of_applications/\" \
                 --field=\"󰖟   Visit Hyprland:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://hyprland.org/\" \
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
                 --field=\"   Hyprland-blizz:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/RedBlizard/Hyprland-blizz\" \
@@ -170,12 +170,12 @@ create_yad_dialog() {
                 --columns=3 \
                 --image=\"$logo_path\" \
                 --image-on-top-center \
-                --field=\"   Cpu information:FBTN\" \"bash $cpu_info_script\" \
-                --field=\"  Memory information:FBTN\" \"bash $memory_info_script\" \
-                --field=\"   Gpu information:FBTN\" \"bash $gpu_info_script\" \
-                --field=\"   Nvidia Gpu information:FBTN\" \"bash $nvidia_info_script\" \
-                --field=\"   Audio Card information:FBTN\" \"bash $audio_device_info_script\" \
-                --field=\"   Hard drives | USB devices information:FBTN\" \"bash $device_info_script\" \
+                --field=\"   Cpu Info:FBTN\" \"bash $cpu_info_script\" \
+                --field=\"  Memory Info:FBTN\" \"bash $memory_info_script\" \
+                --field=\"   Gpu Info:FBTN\" \"bash $gpu_info_script\" \
+                --field=\"   Nvidia Gpu Info:FBTN\" \"bash $nvidia_info_script\" \
+                --field=\"   Audio Device Info:FBTN\" \"bash $audio_device_info_script\" \
+                --field=\"   Storage Devices Info:FBTN\" \"bash $device_info_script\" \
                 --button=\"   Back to main menu\"'" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
             --field="$update_status:FBTN" "bash \"$update_script\"" \
