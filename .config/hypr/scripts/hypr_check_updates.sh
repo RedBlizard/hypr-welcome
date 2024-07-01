@@ -26,8 +26,10 @@ Please run the hypr-welcome app and update."
 check_updates() {
     local repo_dir="$1"
     cd "$repo_dir" || { echo "Failed to change to $repo_dir directory." >&2; return 1; }
+    echo "Checking updates in $(pwd)"
     git fetch origin main
     local commits_behind=$(git rev-list --count HEAD..origin/main)
+    echo "Commits behind: $commits_behind"
     if [ "$commits_behind" -gt 0 ]; then
         return 0
     else
@@ -50,7 +52,10 @@ handle_repository_updates() {
 
     for (( i=1; i<=2; i++ )); do
         if check_updates "$repo_dir"; then
+            echo "Updates found in $repo_name"
             send_notification "$repo_name" "critical"
+        else
+            echo "No updates found in $repo_name"
         fi
         # Wait for 1 minute
         sleep 180
@@ -59,6 +64,7 @@ handle_repository_updates() {
     # Additional critical notification after 5 minutes
     sleep 300
     if check_updates "$repo_dir"; then
+        echo "Additional updates found in $repo_name"
         send_notification "$repo_name" "critical"
     fi
 
@@ -66,6 +72,7 @@ handle_repository_updates() {
     sleep 900  # First reminder after 15 minutes
     while true; do
         if check_updates "$repo_dir"; then
+            echo "Regular updates found in $repo_name"
             send_notification "$repo_name" "normal"
         fi
         # Subsequent reminders every 30 minutes
