@@ -93,11 +93,11 @@ yad --title="Welcome" \
     --tab="System updates" \
         --form \
         --columns=3 \
-        --field="<b>   System updates</b>:FBTN" "bash -c 'yad --notebook --tab=\"System updates\" --form \
+        --field="<b>   System updates</b>:FBTN" "bash -c 'yad --notebook --tab=\"System updates\" --form \
             --geometry=900x410+100+100 \
             --columns=3 \
             --image=\"$HOME/.config/hypr/imgs/hypr-welcome.png\" \
-            --field=\"  <b>General System Update</b>:FBTN\" \"bash $HOME/.config/hypr/scripts/system-update.sh\" \
+            --field=\" <b>General System Update</b>:FBTN\" \"bash $HOME/.config/hypr/scripts/system-update.sh\" \
             --field=\" <b>Hyprland Overall</b> Update:FBTN\" \"bash $kitty_script\" \
             --field=\" <b>Hypr-blizz</b> Update:FBTN\" \"bash $HOME/.config/hypr/scripts/hypr_blizz_update.sh\" \
             --field=\" <b>hypr-welcome</b> Update:FBTN\" \"bash $HOME/.config/hypr/scripts/hypr_welcome_update.sh\" \
