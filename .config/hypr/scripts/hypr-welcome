@@ -89,9 +89,6 @@ else
 fi
 echo "Update Script: $update_script"
 
-# Set GTK CSS provider for Yad dialogs
-#export GTK_THEME="Adwaita:dark"
-export GTK4_RC_FILES="$HOME/.config/yad-custom.css"
 
 # Function to create yad dialog
 create_yad_dialog() {
