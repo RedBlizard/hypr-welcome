@@ -89,6 +89,10 @@ else
 fi
 echo "Update Script: $update_script"
 
+# Set GTK CSS provider for Yad dialogs
+#export GTK_THEME="Adwaita:dark"
+export GTK4_RC_FILES="$HOME/.config/yad-custom.css"
+
 # Function to create yad dialog
 create_yad_dialog() {
     yad --title="Welcome" \
@@ -137,15 +141,15 @@ create_yad_dialog() {
                 --field=\"󱍸   Rank Mirrors:FBTN\" \"bash $eos_rankmirrors_script\" \
                 --field=\"   System Logs:FBTN\" \"bash $eos_log_tool_script\" \
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
-                --field=\"   Hyprland:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/rudy-in/endeavouros-hyprland\" \
-                --field=\"   Installation:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/RedBlizard/hyprland-installation\" \
+                --field=\"   Hyprland-blizz:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/RedBlizard/Hyprland-blizz\" \
+                --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
                 --field=\"󰖟    All Arch packages:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://archlinux.org/packages/\" \
                 --field=\"󰖟    All Aur packages:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://aur.archlinux.org/packages/\" \
                 --field=\"󰖟    All applications:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://wiki.archlinux.org/title/List_of_applications/\" \
                 --field=\"󰖟   Visit Hyprland:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://hyprland.org/\" \
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
-                --field=\"   Hyprland-blizz:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/RedBlizard/Hyprland-blizz\" \
                 --field=\"   hypr-welcome:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/RedBlizard/hypr-welcome\" \
+                --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
                 --field=\"󱌢   Maintenance :FBTN\" \"bash $cleanup_script\" \
                 --field=\"   Grub information :FBTN\" \"bash $grub_info_script\" \
                 --field=\"   Update Grub :FBTN\" \"bash $grub_update_script\" \
@@ -153,7 +157,7 @@ create_yad_dialog() {
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
                 --field=\"   hypr-waybar:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/RedBlizard/hypr-waybar\" \
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
-                --button=\"   Back to main menu\"'" \
+                --button=\"    Back to main menu   \"'" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
             --field="<span font_desc='CustomFont 10'></span> EndeavourOS:FBTN" "bash $HOME/.config/hypr/scripts/welcome_browser.sh https://endeavouros.com/" \
             --field="Update Mirrors:FBTN" "bash $update_mirrors_script" \
