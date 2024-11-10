@@ -2,7 +2,9 @@
 
 # Define paths and scripts (adjust paths as per your setup)
 logo_path="$HOME/.config/hypr/imgs/hypr-welcome.png"
-settings_script="$HOME/.config/hypr/scripts/yad_settings.sh"
+settings_script="$HOME/.config/waybar/scripts/hyprgui.sh"
+hypr_information_script="$HOME/.config/hypr/scripts/yad_settings.sh"
+hypr_swww_script="$HOME/.config/hypr/scripts/yad_swww.sh"
 system_update_script="$HOME/.config/hypr/scripts/system-update.sh"
 update_mirrors_script="$HOME/.config/hypr/scripts/reflector_simple.sh"
 eos_rankmirrors_script="$HOME/.config/hypr/scripts/eos-rankmirrors.sh"
@@ -17,7 +19,7 @@ gpu_info_script="$HOME/.config/hypr/scripts/Gpu_info.sh"
 nvidia_info_script="$HOME/.config/hypr/scripts/Nvidia_gpu_info.sh"
 audio_device_info_script="$HOME/.config/hypr/scripts/Audio_device_info.sh"
 device_info_script="$HOME/.config/hypr/scripts/device_info.sh"
-grub_info_script="$HOME/.config/hypr/scripts/grub_info.sh"
+keyhint_script="$HOME/.config/hypr/scripts/keyhint.sh"
 grub_update_script="$HOME/.config/hypr/scripts/grub_update.sh"
 grub_rebuild_script="$HOME/.config/hypr/scripts/grub_rebuild.sh"
 kill_script="$HOME/.config/hypr/scripts/kill-hypr-welcome"
@@ -148,9 +150,9 @@ create_yad_dialog() {
                 --field=\"   hypr-welcome:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/RedBlizard/hypr-welcome\" \
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
                 --field=\"󱌢   Maintenance :FBTN\" \"bash $cleanup_script\" \
-                --field=\"   Grub information :FBTN\" \"bash $grub_info_script\" \
-                --field=\"   Update Grub :FBTN\" \"bash $grub_update_script\" \
-                --field=\"   Rebuild Grub :FBTN\" \"bash $grub_rebuild_script\" \
+                --field=\"   Keyhint :FBTN\" \"bash $keyhint_script\" \
+                --field=\"   See your configs :FBTN\" \"bash $hypr_information_script\" \
+                --field=\"   Swww settings :FBTN\" \"bash $hypr_swww_script\" \
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
                 --field=\"   hypr-waybar:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/RedBlizard/hypr-waybar\" \
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
@@ -163,10 +165,10 @@ create_yad_dialog() {
             --field="<span foreground='white'> </span>                                        :LBL" "" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
             --field="<span font_desc='CustomFont 10'> </span> Trouble Shoot Logs:FBTN" "bash $eos_log_tool_script" \
-        --tab="Hardware and Drivers" \
+        --tab="System information" \
             --form \
             --columns=3 \
-            --field="<b><span font_desc='CustomFont 10'>󰦬</span>   Hardware and Drivers</b>:FBTN" "bash -c 'yad --notebook --tab=\"Hardware and Drivers\" --form \
+            --field="<b><span font_desc='CustomFont 10'>󰦬</span>   System information</b>:FBTN" "bash -c 'yad --notebook --tab=\"Hardware and Drivers\" --form \
                 --geometry=900x410+100+100 \
                 --columns=3 \
                 --image=\"$logo_path\" \

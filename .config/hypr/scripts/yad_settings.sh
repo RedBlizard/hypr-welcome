@@ -6,7 +6,7 @@ logo_path="$HOME/.config/hypr/imgs/hypr-welcome.png"
 # Function to show the main menu
 show_main_menu() {
     while true; do
-        main_menu="Hyprland\nWaybar configs\nWaybar styles\nSwww options"
+        main_menu="Hyprland\nWaybar configs\nWaybar styles"
         selected_config=$(echo -e "$main_menu" | yad --title="Settings" --text="" --geometry=900x410+800+600 --width=900 --height=410 --fixed --list --column="Settings" --separator='\n' --borders=9 -timeout=5 --button="   Kill me i dare you ..." --center --image="$logo_path")
 
         # Check if the escape button was pressed or the dialog was closed
@@ -24,8 +24,6 @@ show_main_menu() {
                 launch_waybar_configs ;;
             "Waybar styles")
                 launch_waybar_styles ;;
-            "Swww options")
-                launch_swww_options ;;
             *)
                 ;;
         esac
@@ -94,36 +92,6 @@ launch_waybar_styles() {
             *)
                 echo "Launching nano for $selected_submenu"
                 kitty nano "$selected_submenu" ;;
-        esac
-    done
-}
-
-# Function to launch Swww options submenu
-launch_swww_options() {
-    while true; do
-        submenu="Back to main menu\nKill swww\nChange Wallpaper Directory\nInitialize swww"
-        selected_submenu=$(echo -e "$submenu" | yad --title="Swww Options" --text="" --geometry=900x410+800+600 --width=900 --height=410 --fixed --list --column="Options" --separator='\n' --borders=9 -timeout=5 --button=Close --center --image="$logo_path")
-        
-        # Check if the escape button was pressed or the dialog was closed
-        if [ "$selected_submenu" == "" ]; then
-            echo "Escape key pressed or dialog closed. Exiting script."
-            exit
-        fi
-
-        case $selected_submenu in
-            "Back to main menu")
-                break ;;
-            "Kill swww")
-                echo "Killing swww"
-                pkill swww ;;
-            "Change Wallpaper Directory")
-                echo "Launching nano for random-wallpaper"
-                kitty nano ~/.config/hypr/scripts/random-wallpaper ;;
-            "Initialize swww")
-                echo "Initializing swww"
-                swww init ;;
-            *)
-                ;;
         esac
     done
 }
