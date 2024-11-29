@@ -158,7 +158,7 @@ create_yad_dialog() {
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
                 --button=\"    Back to main menu   \"'" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
-            --field="<span font_desc='CustomFont 10'></span> EndeavourOS:FBTN" "bash $HOME/.config/hypr/scripts/welcome_browser.sh https://endeavouros.com/" \
+            --field="<span font_desc='CustomFont 10'>></span> EndeavourOS:FBTN" "bash $HOME/.config/hypr/scripts/welcome_browser.sh https://endeavouros.com/" \
             --field="Update Mirrors:FBTN" "bash $update_mirrors_script" \
             --field="Rank Mirrors:FBTN" "bash $eos_rankmirrors_script" \
             --field="Forum:FBTN" "bash $HOME/.config/hypr/scripts/welcome_browser.sh https://forum.endeavouros.com/" \
