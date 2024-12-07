@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # List of available Waybar configurations
-WAYBAR_CONFIGS=("Desktop" "Laptop")
+WAYBAR_CONFIGS=("Desktop" "Laptop" "Minimal")
 
 # Path to your custom logo or image
 logo_path="$HOME/.config/hypr/imgs/hypr-welcome.png"
@@ -18,10 +18,12 @@ fi
 # Define the paths for the desktop and laptop configurations
 DESKTOP_CONFIG_PATH=~/.config/waybar/conf/w1-config-desktop.jsonc
 LAPTOP_CONFIG_PATH=~/.config/waybar/conf/w2-config-laptop.jsonc
+MINIMAL_CONFIG_PATH=~/.config/waybar/conf/w3-config-desktop.jsonc
 
 # Define the paths for the desktop and laptop styles
 DESKTOP_STYLE_PATH=~/.config/waybar/style/w1-style.css
 LAPTOP_STYLE_PATH=~/.config/waybar/style/w2-style.css
+MINIMAL_STYLE_PATH=~/.config/waybar/style/w3-style.css
 
 # Update the Waybar configuration based on the user's selection
 case $selected_config in
@@ -33,6 +35,10 @@ case $selected_config in
     ln -sf "$LAPTOP_CONFIG_PATH" ~/.config/waybar/config.jsonc
     ln -sf "$LAPTOP_STYLE_PATH" ~/.config/waybar/style.css
     ;;
+  "Minimal")
+    ln -sf "$MINIMAL_CONFIG_PATH" ~/.config/waybar/config.jsonc
+    ln -sf "$MINIMAL_STYLE_PATH" ~/.config/waybar/style.css
+    ;; 
   *)
     echo "Invalid selection."
     exit 1
@@ -62,3 +68,4 @@ while pgrep -x waybar >/dev/null; do sleep 1; done
 
 # Launch Waybar
 waybar &
+
