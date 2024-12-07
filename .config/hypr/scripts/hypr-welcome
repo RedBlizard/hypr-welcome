@@ -182,7 +182,7 @@ create_yad_dialog() {
                 --button=\"   Back to main menu\"'" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
             --field="$update_status:FBTN" "bash \"$update_script\"" \
-            --field="Switch Your Waybar:FBTN" "bash $waybar_script" \
+            --field="Set Your Waybar:FBTN" "bash $waybar_script" \
             --field="Settings:FBTN" "bash $settings_script" \
             --field="Maintenance:FBTN" "bash $cleanup_script" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
