@@ -132,21 +132,21 @@ create_yad_dialog() {
                 --field=\"󱍸   Rank Mirrors:FBTN\" \"bash $eos_rankmirrors_script\" \
                 --field=\"   System Logs:FBTN\" \"bash $eos_log_tool_script\" \
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
-                --field=\"   Hyprland-blizz:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/RedBlizard/Hyprland-blizz\" \
+                --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
                 --field=\"󰖟    All Arch packages:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://archlinux.org/packages/\" \
                 --field=\"󰖟    All Aur packages:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://aur.archlinux.org/packages/\" \
                 --field=\"󰖟    All applications:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://wiki.archlinux.org/title/List_of_applications/\" \
                 --field=\"󰖟   Visit Hyprland:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://hyprland.org/\" \
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
-                --field=\"   hypr-welcome:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/RedBlizard/hypr-welcome\" \
+                --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
                 --field=\"󱌢   Maintenance :FBTN\" \"bash $cleanup_script\" \
                 --field=\"   Keyhint :FBTN\" \"bash $keyhint_script\" \
                 --field=\"   See your configs :FBTN\" \"bash $hypr_information_script\" \
                 --field=\"   Swww settings :FBTN\" \"bash $hypr_swww_script\" \
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
-                --field=\"   hypr-waybar:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/RedBlizard/hypr-waybar\" \
+                --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
                 --button=\"    Back to main menu   \"'" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
