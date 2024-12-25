@@ -92,32 +92,30 @@ fi
 echo "Update Script: $update_script"
 
 
-# Function to create yad dialog
+# Function to create the Yad dialog
 create_yad_dialog() {
     yad --title="Welcome" \
         --image="$logo_path" \
         --image-on-top-center \
         --borders=3 \
-        --text-align=center \
         --geometry=900x410+800+200 \
-        --width=900 \
-        --height=410 \
+        --tabs-position=top \
         --fixed \
         --no-buttons \
-        --tabs-position=top \
-        --tab="System updates" \
+        --tab="System information" \
             --form \
             --columns=3 \
-            --field="<b><span font_desc='CustomFont 10'></span>  System updates</b>:FBTN" "bash -c 'yad --notebook --tab=\"System updates\" --form \
+            --field="<b><span font_desc='CustomFont 10'></span>   General info</b>:FBTN" "bash -c 'yad --notebook --tab=\"Hardware and Drivers\" --form \
                 --geometry=900x410+100+100 \
                 --columns=3 \
                 --image=\"$logo_path\" \
-                --field=\" <b>System Update</b>:FBTN\" \"bash $system_update_script\" \
-                --field=\" <b>Full hypr</b> Update:FBTN\" \"bash $kitty_script\" \
-                --field=\" <b>Hypr-blizz</b> Update:FBTN\" \"bash $hypr_blizz_update_script\" \
-                --field=\" <b>hypr-welcome</b> Update:FBTN\" \"bash $hypr_welcome_update_script\" \
-                --field=\" <b>hypr-waybar</b> Update:FBTN\" \"bash $hypr_waybar_update_script\" \
-                --field=\"$update_status:FBTN\" \"bash $update_script\" \
+                --image-on-top-center \
+                --field=\"󰖟   Arch News:FBTN\" \"bash $arch_news_script\" \
+                --field=\"󰖟   Arch Wiki:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://wiki.archlinux.org/\" \
+                --field=\"󰖟   Wiki Hyprland:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://wiki.hyprland.org/\" \
+                --field=\"󰖟   Wiki Waybar:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/Alexays/Waybar/wiki\" \
+                --field=\"󰖟   EndeavourOS:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://endeavouros.com/\" \
+                --field=\"󰖟   Discovery:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://discovery.endeavouros.com/\" \
                 --button=\"   Back to main menu\"'" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
             --field="<span font_desc='CustomFont 10'></span> Wiki Hyprland:FBTN" "bash $HOME/.config/hypr/scripts/welcome_browser.sh https://wiki.hyprland.org/" \
@@ -165,24 +163,24 @@ create_yad_dialog() {
             --field="<span foreground='white'> </span>                                        :LBL" "" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
             --field="<span font_desc='CustomFont 10'> </span> Trouble Shoot Logs:FBTN" "bash $eos_log_tool_script" \
-        --tab="System information" \
+        --tab="System updates" \
             --form \
             --columns=3 \
-            --field="<b><span font_desc='CustomFont 10'>󰦬</span>   System information</b>:FBTN" "bash -c 'yad --notebook --tab=\"Hardware and Drivers\" --form \
+            --field="<b><span font_desc='CustomFont 10'></span>   System updates</b>:FBTN" "bash -c 'yad --notebook --tab=\"System updates\" --form \
                 --geometry=900x410+100+100 \
                 --columns=3 \
                 --image=\"$logo_path\" \
                 --image-on-top-center \
-                --field=\"   Cpu Info:FBTN\" \"bash $cpu_info_script\" \
-                --field=\"  Memory Info:FBTN\" \"bash $memory_info_script\" \
-                --field=\"   Gpu Info:FBTN\" \"bash $gpu_info_script\" \
-                --field=\"   Nvidia Gpu Info:FBTN\" \"bash $nvidia_info_script\" \
-                --field=\"   Audio Device Info:FBTN\" \"bash $audio_device_info_script\" \
-                --field=\"   Storage Devices Info:FBTN\" \"bash $device_info_script\" \
+                --field=\" <b>System Update</b>:FBTN\" \"bash $system_update_script\" \
+                --field=\" <b>Full hypr</b> Update:FBTN\" \"bash $kitty_script\" \
+                --field=\" <b>Hypr-blizz</b> Update:FBTN\" \"bash $hypr_blizz_update_script\" \
+                --field=\" <b>hypr-welcome</b> Update:FBTN\" \"bash $hypr_welcome_update_script\" \
+                --field=\" <b>hypr-waybar</b> Update:FBTN\" \"bash $hypr_waybar_update_script\" \
+                --field=\"$update_status:FBTN\" \"bash $update_script\" \
                 --button=\"   Back to main menu\"'" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
             --field="$update_status:FBTN" "bash \"$update_script\"" \
-            --field="Set Your Waybar:FBTN" "bash $waybar_script" \
+            --field="Switch Your Waybar:FBTN" "bash $waybar_script" \
             --field="Settings:FBTN" "bash $settings_script" \
             --field="Maintenance:FBTN" "bash $cleanup_script" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
