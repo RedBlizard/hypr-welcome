@@ -8,20 +8,11 @@ hypr_swww_script="$HOME/.config/hypr/scripts/yad_swww.sh"
 system_update_script="$HOME/.config/hypr/scripts/system-update.sh"
 update_mirrors_script="$HOME/.config/hypr/scripts/reflector_simple.sh"
 eos_rankmirrors_script="$HOME/.config/hypr/scripts/eos-rankmirrors.sh"
-arch_news_script="$HOME/.config/hypr/scripts/eos-arch-news.sh"
 eos_log_tool_script="$HOME/.config/hypr/scripts/eos-log-tool.sh"
 cleanup_script="$HOME/.config/hypr/scripts/cleanup.sh"
 kitty_script="$HOME/.config/hypr/scripts/yad_update_dots.sh"
 waybar_script="$HOME/.config/hypr/scripts/yad_switch-waybar-config.sh"
-cpu_info_script="$HOME/.config/hypr/scripts/cpu_info.sh"
-memory_info_script="$HOME/.config/hypr/scripts/memory_info.sh"
-gpu_info_script="$HOME/.config/hypr/scripts/Gpu_info.sh"
-nvidia_info_script="$HOME/.config/hypr/scripts/Nvidia_gpu_info.sh"
-audio_device_info_script="$HOME/.config/hypr/scripts/Audio_device_info.sh"
-device_info_script="$HOME/.config/hypr/scripts/device_info.sh"
 keyhint_script="$HOME/.config/hypr/scripts/keyhint.sh"
-grub_update_script="$HOME/.config/hypr/scripts/grub_update.sh"
-grub_rebuild_script="$HOME/.config/hypr/scripts/grub_rebuild.sh"
 kill_script="$HOME/.config/hypr/scripts/kill-hypr-welcome"
 hypr_blizz_update_script="$HOME/.config/hypr/scripts/hypr_blizz_update.sh"
 hypr_welcome_update_script="$HOME/.config/hypr/scripts/hypr_welcome_update.sh"
@@ -110,12 +101,12 @@ create_yad_dialog() {
                 --columns=3 \
                 --image=\"$logo_path\" \
                 --image-on-top-center \
-                --field=\"󰖟   Arch News:FBTN\" \"bash $arch_news_script\" \
+                --field=\"󰖟   Arch News:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://archlinux.org/news//\" \
                 --field=\"󰖟   Arch Wiki:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://wiki.archlinux.org/\" \
                 --field=\"󰖟   Wiki Hyprland:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://wiki.hyprland.org/\" \
                 --field=\"󰖟   Wiki Waybar:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://github.com/Alexays/Waybar/wiki\" \
                 --field=\"󰖟   EndeavourOS:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://endeavouros.com/\" \
-                --field=\"󰖟   Discovery:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://discovery.endeavouros.com/\" \
+                --field=\"󰖟   Wiki EndeavourOS:FBTN\" \"bash $HOME/.config/hypr/scripts/welcome_browser.sh https://discovery.endeavouros.com/\" \
                 --button=\"   Back to main menu\"'" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
             --field="<span font_desc='CustomFont 10'></span> Wiki Hyprland:FBTN" "bash $HOME/.config/hypr/scripts/welcome_browser.sh https://wiki.hyprland.org/" \
@@ -124,7 +115,7 @@ create_yad_dialog() {
             --field="Arch Wiki:FBTN" "bash $HOME/.config/hypr/scripts/welcome_browser.sh https://wiki.archlinux.org/" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
-            --field="<span font_desc='CustomFont 10'></span>  Arch News:FBTN" "bash $arch_news_script" \
+            --field="<span font_desc='CustomFont 10'></span>  Arch News:FBTN" "bash $HOME/.config/hypr/scripts/welcome_browser.sh https://archlinux.org/news" \
         --tab="Assistant" \
             --form \
             --columns=3 \
