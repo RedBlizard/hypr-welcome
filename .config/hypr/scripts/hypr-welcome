@@ -142,7 +142,7 @@ create_yad_dialog() {
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
                 --field=\"󰤌   Edit Hyprland / Waybar :FBTN\" \"bash $hypr_information_script\" \
-                --field=\"   Keyhint :FBTN\" \"bash $keyhint_script\" \
+                --field=\"   Keyhint :FBTN\" \"bash $hypr_keyhint_script\" \
                 --field=\"   Swww settings :FBTN\" \"bash $hypr_swww_script\" \
                 --field=\"󱌢   Maintenance :FBTN\" \"bash $cleanup_script\" \
                 --field=\"<span foreground='white'> </span>                                        :LBL\" \"\" \
