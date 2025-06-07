@@ -49,7 +49,7 @@ launch_swww_options() {
                 kitty nano ~/.config/hypr/scripts/random-wallpaper ;;
             "Initialize swww")
                 echo "Initializing swww"
-                swww init ;;
+                swww-daemon ;;
             *)
                 ;;
         esac
