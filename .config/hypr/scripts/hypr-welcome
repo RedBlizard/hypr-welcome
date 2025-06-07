@@ -5,6 +5,7 @@ logo_path="$HOME/.config/hypr/imgs/hypr-welcome.png"
 hypr_information_script="$HOME/.config/hypr/scripts/yad_settings.sh"
 hypr_keyhint_script="$HOME/.config/hypr/scripts/hypr-keyhint.sh"
 hypr_swww_script="$HOME/.config/hypr/scripts/yad_swww.sh"
+wallpaper_selector_script="$HOME/.config/hypr/scripts/wallpaper-selector.sh"
 keyring_repair_script="$HOME/.config/hypr/scripts/keyring_repair.sh"
 refresh_yay_script="$HOME/.config/hypr/scripts/refresh-yay.sh"
 pgp_key_repair_script="$HOME/.config/hypr/scripts/pgp_key_repair.sh"
@@ -174,7 +175,7 @@ create_yad_dialog() {
             --field="<span foreground='white'> </span>                                        :LBL" "" \
             --field="$update_status:FBTN" "bash \"$update_script\"" \
             --field="Switch Your Waybar:FBTN" "bash $waybar_script" \
-            --field="Keyhint:FBTN" "bash $hypr_keyhint_script" \
+            --field="Wallpaper-Selector:FBTN" "bash $wallpaper_selector_script" \
             --field="Maintenance:FBTN" "bash $cleanup_script" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
