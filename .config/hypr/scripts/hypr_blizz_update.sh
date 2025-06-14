@@ -119,9 +119,8 @@ read -rp "Do you want to update your dotfiles? (Enter 'Yy' for yes or 'Nn' for n
 if [[ "$update_choice" =~ ^[Yy]$ ]]; then
     show_message "Updating dotfiles from Hyprland-blizz..." "$BLUE"
     
-    rsync -av --delete \
-        "$HOME/hyprland-dots/Hyprland-blizz/" \
-        "$HOME/" || { show_message "Failed to update dotfiles from Hyprland-blizz." "$RED"; exit 1; }
+    rsync -a --info=stats2 "$HOME/hyprland-dots/Hyprland-blizz/" "$HOME/" \
+    || { show_message "Failed to update dotfiles from Hyprland-blizz." "$RED"; exit 1; }
 
 else
     show_message "No hyprland dotfiles update performed." "$BLUE"
