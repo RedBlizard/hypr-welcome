@@ -88,18 +88,18 @@ echo "Update Script: $update_script"
 
 # Function to create the Yad dialog
 create_yad_dialog() {
-    yad --title="Welcome" \
+    yad --title="hypr-welcome" \
         --image="$logo_path" \
         --image-on-top-center \
         --borders=3 \
         --geometry=900x410+800+200 \
         --tabs-position=top \
-        --fixed \
         --no-buttons \
-        --tab="System information" \
+        --no-buttons \
+        --tab="General info" \
             --form \
             --columns=3 \
-            --field="<b><span font_desc='CustomFont 10'></span>   General info</b>:FBTN" "bash -c 'yad --notebook --tab=\"Hardware and Drivers\" --form \
+            --field="<b><span font_desc='CustomFont 10'></span>   General info</b>:FBTN" "bash -c 'yad --notebook --tab=\"General info\" --form \
                 --geometry=900x410+100+100 \
                 --columns=3 \
                 --image=\"$logo_path\" \
