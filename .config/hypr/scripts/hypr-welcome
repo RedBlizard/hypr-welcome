@@ -89,8 +89,8 @@ echo "Update Script: $update_script"
 # Function to create the Yad dialog
 create_yad_dialog() {
     yad --title="hypr-welcome" \
-        --image="$logo_path" \
-        --image-on-top-center \
+        --image="$logo_path" --image-placement=left \
+        --image="$logo_path" --image-on-top \
         --borders=3 \
         --geometry=900x410+800+200 \
         --tabs-position=top \
