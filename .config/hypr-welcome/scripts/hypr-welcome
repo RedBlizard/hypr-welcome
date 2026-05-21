@@ -112,7 +112,7 @@ create_yad_dialog() {
                 --field=\"󰖟   About hypr-welcome:FBTN\" \"bash $HOME/.config/hypr-welcome/scripts/welcome_browser.sh https://github.com/RedBlizard/hypr-welcome/\" \
                 --button=\"   Back to main menu\"'" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
-            --field="<span font_desc='CustomFont 10'></span> Wiki Hyprland:FBTN" "bash $HOME/.config/hypr/scripts/welcome_browser.sh https://wiki.hyprland.org/" \
+            --field="<span font_desc='CustomFont 10'></span> Wiki Hyprland:FBTN" "bash $HOME/.config/hypr-welcome/scripts/welcome_browser.sh https://wiki.hyprland.org/" \
             --field="Waybar Wiki:FBTN" "bash $HOME/.config/hypr-welcome/scripts/welcome_browser.sh https://github.com/Alexays/Waybar/wiki" \
             --field="Discovery:FBTN" "bash $HOME/.config/hypr-welcome/scripts/welcome_browser.sh https://discovery.endeavouros.com/" \
             --field="Arch Wiki:FBTN" "bash $HOME/.config/hypr-welcome/scripts/welcome_browser.sh https://wiki.archlinux.org/" \
