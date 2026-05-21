@@ -173,7 +173,7 @@ if ! check_symlinks; then
     cd "$HOME/.config/hypr-welcome/scripts" || { echo "Failed to change to the scripts directory." >&2; exit 1; }
 
     # Path to your welcome script
-    welcome_script="$HOME/.config/hypr-welcom/scripts/hypr-welcome"
+    welcome_script="$HOME/.config/hypr-welcome/scripts/hypr-welcome"
 
     # Path to the symlink in /usr/bin
     symlink="/usr/bin/hypr-welcome"
