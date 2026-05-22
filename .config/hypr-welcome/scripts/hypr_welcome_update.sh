@@ -41,7 +41,7 @@ backup() {
     cp -r "$source_dir" "$dest_dir"
 }
 
-folders=("hypr")
+folders=("hypr-welcome")
 
 for folder in "${folders[@]}"; do
     folder_path="/home/$username/.config/$folder"
