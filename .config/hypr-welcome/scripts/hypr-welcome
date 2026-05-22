@@ -38,14 +38,31 @@ check_network() {
 # Function to check for updates in a specific repository
 check_updates() {
     local repo_dir="$1"
-    cd "$repo_dir" || { echo "Failed to change to directory: $repo_dir." >&2; return 1; }
-    git fetch origin main
-    local commits_behind=$(git rev-list --count HEAD..origin/main)
-    if [ "$commits_behind" -gt 0 ]; then
-        return 0
-    else
+    
+    # Check of de repo directory wel bestaat
+    if [ ! -d "$repo_dir/.git" ]; then
+        echo "Repo not found: $repo_dir" >&2
         return 1
     fi
+    
+    # Use SUBSHELL ( ... ) zodat de 'cd' niet lekt naar de hoofdshell!
+    (
+        cd "$repo_dir" || exit 1
+        
+        # Timeout van 3 sec + quiet + verberg errors → GUI start snel en schoon
+        if ! timeout 3 git fetch origin main --quiet 2>/dev/null; then
+            exit 1
+        fi
+        
+        local commits_behind
+        commits_behind=$(git rev-list --count HEAD..origin/main 2>/dev/null)
+        
+        if [ "${commits_behind:-0}" -gt 0 ]; then
+            exit 0  # Updates beschikbaar
+        else
+            exit 1  # Geen updates
+        fi
+    )
 }
 
 # Check for updates in each repository
@@ -53,36 +70,39 @@ update_hypr_welcome=false
 update_hypr_waybar=false
 update_hypr_blizz=false
 
-if check_updates "$hypr_welcome_repo"; then
-    update_hypr_welcome=true
-fi
+check_updates "$hypr_welcome_repo" && update_hypr_welcome=true
+check_updates "$hypr_waybar_repo"  && update_hypr_waybar=true
+check_updates "$hypr_blizz_repo"   && update_hypr_blizz=true
 
-if check_updates "$hypr_waybar_repo"; then
-    update_hypr_waybar=true
-fi
+update_count=0
+$update_hypr_blizz   && ((update_count++))
+$update_hypr_welcome && ((update_count++))
+$update_hypr_waybar  && ((update_count++))
 
-if check_updates "$hypr_blizz_repo"; then
-    update_hypr_blizz=true
-fi
-
-# Determine the update status message
-if $update_hypr_blizz || $update_hypr_welcome || $update_hypr_waybar; then
-    update_status="<span foreground='#FF7F7F'>  Hyprland updates found !</span>"
+if [ "$update_count" -gt 0 ]; then
+    # Show how many updates there are (user sees direct the scope)
+    update_status="<span foreground='#FF7F7F'> Hyprland updates: ${update_count} found!</span>"
+    
+    # Smart choice: by WITH more updates → run the "Full Update" (yad_update_dots.sh)
+    # With precise ONE update → only run specific script
+    if [ "$update_count" -gt 1 ]; then
+        update_script="$kitty_script"  # Dit is je "Full hypr Update" script
+    elif $update_hypr_blizz; then
+        update_script="$hypr_blizz_update_script"
+    elif $update_hypr_welcome; then
+        update_script="$hypr_welcome_update_script"
+    elif $update_hypr_waybar; then
+        update_script="$hypr_waybar_update_script"
+    fi
 else
-    update_status="  No hyprland updates"
+    update_status=" Hyprland is up-to-date"
+    # fallback: show een notifycation in stead of just a empty command
+    update_script="notify-send 'Hyprland' 'All is already up-to-date! 🚀' -i '$logo_path'"
 fi
 
-# Echo to check the update status (for debugging)
+# Debug output
 echo "Update Status: $update_status"
-if $update_hypr_blizz; then
-    update_script="$hypr_blizz_update_script"
-elif $update_hypr_welcome; then
-    update_script="$hypr_welcome_update_script"
-elif $update_hypr_waybar; then
-    update_script="$hypr_waybar_update_script"
-else
-    update_script=""
-fi
+echo "Update count:  $update_count"
 echo "Update Script: $update_script"
 
 
