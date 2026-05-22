@@ -200,6 +200,19 @@ if ! check_symlinks; then
     sudo ln -sf "$update_script" "$symlink"
 fi
 
+# Terminate already running bar instances
+
+killall -q waybar
+
+# Wait until the waybar processes have been shut down
+
+while pgrep -x waybar >/dev/null; do sleep 1; done
+
+# Launch main
+
+waybar &
+
+
 # Notify user about the end of the script
 notify-send "We are done. Enjoy your updated Hyprland experience."
 
