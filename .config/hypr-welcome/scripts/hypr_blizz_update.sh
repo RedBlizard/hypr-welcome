@@ -21,7 +21,7 @@ launch_alacritty_terminal() {
 launch_alacritty_terminal
 
 # Set the log file path
-log_file="$HOME/dotfiles-update_log.txt"
+log_file="$HOME/hyprland-update_log.txt"
 
 # Redirect stdout (1) and stderr (2) to the log file
 exec > >(tee -i "$log_file") 2>&1
@@ -41,7 +41,7 @@ backup() {
     cp -r "$source_dir" "$dest_dir"
 }
 
-folders=("alacritty" "btop" "cava" "dunst" "hypr" "hypr-welcome" "kitty" "Kvantum" "networkmanager-dmenu" "nwg-look" "pacseek" "pipewire" "qt6ct" "ranger" "sddm-config-editor" "systemd" "Thunar" "waybar" "wlogout" "wofi" "xsettingsd" "gtk-2.0" "gtk-3.0" "gtk-4.0" "starship" "swaync")
+folders=("alacritty" "btop" "cava" "dunst" "hypr" "kitty" "Kvantum" "networkmanager-dmenu" "nwg-look" "pacseek" "pipewire" "qt6ct" "ranger" "sddm-config-editor" "systemd" "Thunar" "waybar" "wlogout" "wofi" "xsettingsd" "gtk-2.0" "gtk-3.0" "gtk-4.0" "starship" "swaync")
 
 for folder in "${folders[@]}"; do
     folder_path="/home/$username/.config/$folder"
