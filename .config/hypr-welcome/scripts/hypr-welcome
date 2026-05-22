@@ -95,7 +95,7 @@ if [ "$update_count" -gt 0 ]; then
         update_script="$hypr_waybar_update_script"
     fi
 else
-    update_status=" Hyprland is up-to-date"
+    update_status=" Hyprland is up-to-date"
     # fallback: show een notifycation in stead of just a empty command
     update_script="notify-send 'Hyprland' 'All is already up-to-date! 🚀' -i '$logo_path'"
 fi
