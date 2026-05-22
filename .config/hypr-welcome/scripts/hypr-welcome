@@ -49,9 +49,9 @@ check_updates() {
 }
 
 # Check for updates in each repository
-update_hypr_welcome=false
-update_hypr_waybar=false
-update_hypr_blizz=false
+update_hypr_welcome=true
+update_hypr_waybar=true
+update_hypr_blizz=true
 
 if check_updates "$hypr_welcome_repo"; then
     update_hypr_welcome=true
@@ -67,7 +67,7 @@ fi
 
 # Determine the update status message
 if $update_hypr_blizz || $update_hypr_welcome || $update_hypr_waybar; then
-    update_status="<span foreground='#FF7F7F'>  Hyprland updates</span>"
+    update_status="<span foreground='#FF7F7F'>  Hyprland updates found</span>"
 else
     update_status="  No hyprland updates"
 fi
