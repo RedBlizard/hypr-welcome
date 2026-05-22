@@ -81,7 +81,7 @@ $update_hypr_waybar  && ((update_count++))
 
 if [ "$update_count" -gt 0 ]; then
     # Show how many updates there are (user sees direct the scope)
-    update_status="<span foreground='#FF7F7F'>  Hyprland updates: ${update_count} found</span>"
+    update_status="<span foreground='#FF7F7F'>  Hyprland updates:found</span>"
     
     # Smart choice: by WITH more updates → run the "Full Update" (yad_update_dots.sh)
     # With precise ONE update → only run specific script
