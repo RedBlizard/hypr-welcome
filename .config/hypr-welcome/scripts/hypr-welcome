@@ -75,7 +75,7 @@ update_count=$(( ${commits_welcome:-0} + ${commits_waybar:-0} + ${commits_blizz:
 
 # Go straight into the if block - no reset needed
 if [ "$update_count" -gt 0 ]; then
-    update_status="<span foreground='#FF7F7F'>  Hyprland updates: $update_count found</span>"
+    update_status="<span foreground='#FF7F7F'> Hyprland updates: $update_count found</span>"
     
     if [ "$update_count" -gt 1 ]; then
         update_script="$kitty_script"
@@ -87,7 +87,7 @@ if [ "$update_count" -gt 0 ]; then
         update_script="$hypr_waybar_update_script"
     fi
 else
-    update_status="  Hyprland is up-to-date"
+    update_status=" Hyprland is up-to-date"
     update_script="$HOME/.config/hypr-welcome/scripts/no_updates.sh"
 fi
 
