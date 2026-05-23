@@ -128,11 +128,11 @@ if [[ "$update_choice" =~ ^[Yy]$ ]]; then
     rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.Kvantum-themes/" "$HOME/.Kvantum-themes/" \
         || { show_message "Failed to update .Kvantum-themes from Hyprland-blizz." "$RED"; exit 1; }
 
-    rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.local/" "$HOME/.local/" \
+    rsync -a "$HOME/hyprland-dots/Hyprland-blizz/.local/" "$HOME/.local/" \
         || { show_message "Failed to update .local from Hyprland-blizz." "$RED"; exit 1; }
 
-    # Sync Pictures directory (only Pictures, not entire $HOME)
-    rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/Pictures/" "$HOME/Pictures/" \
+    # Sync Pictures directory (no --delete: user files like screenshots must be preserved)
+    rsync -a "$HOME/hyprland-dots/Hyprland-blizz/Pictures/" "$HOME/Pictures/" \
         || { show_message "Failed to update Pictures from Hyprland-blizz." "$RED"; exit 1; }
 
     # Sync .config subdirectories (ONLY the ones managed by this repo)

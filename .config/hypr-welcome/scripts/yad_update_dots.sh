@@ -128,9 +128,9 @@ if [[ "$update_choice" =~ ^[Yy]$ ]]; then
         || { show_message "Failed to update .icons." "$RED"; exit 1; }
     rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.Kvantum-themes/" "$HOME/.Kvantum-themes/" \
         || { show_message "Failed to update .Kvantum-themes." "$RED"; exit 1; }
-    rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.local/" "$HOME/.local/" \
+    rsync -a "$HOME/hyprland-dots/Hyprland-blizz/.local/" "$HOME/.local/" \
         || { show_message "Failed to update .local." "$RED"; exit 1; }
-    rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/Pictures/" "$HOME/Pictures/" \
+    rsync -a "$HOME/hyprland-dots/Hyprland-blizz/Pictures/" "$HOME/Pictures/" \
         || { show_message "Failed to update Pictures." "$RED"; exit 1; }
     
     for config_dir in alacritty btop cava dunst hypr kitty Kvantum networkmanager-dmenu nwg-look pacseek pipewire qt6ct ranger sddm-config-editor systemd Thunar waybar wlogout wofi xsettingsd gtk-2.0 gtk-3.0 gtk-4.0 starship swaync; do
