@@ -5,7 +5,7 @@ logo_path="$HOME/.config/hypr-welcome/imgs/hypr-welcome.png"
 hypr_information_script="$HOME/.config/hypr-welcome/scripts/yad_settings.sh"
 hypr_keyhint_script="$HOME/.config/hypr-welcome/scripts/hypr-keyhint.sh"
 hypr_awww_script="$HOME/.config/hypr-welcome/scripts/yad_awww.sh"
-wallpaper_selector_script="$HOME/.config/hypr-welcome/scripts/wallpaper-selector.sh"
+wallpaper_selector_script="$HOME/.config/hypr-welcome/scripts/waytrogen.sh"
 keyring_repair_script="$HOME/.config/hypr-welcome/scripts/keyring_repair.sh"
 refresh_yay_script="$HOME/.config/hypr-welcome/scripts/refresh-yay.sh"
 pgp_key_repair_script="$HOME/.config/hypr-welcome/scripts/pgp_key_repair.sh"
@@ -186,7 +186,7 @@ create_yad_dialog() {
             --field="<span foreground='white'> </span>                                        :LBL" "" \
             --field="$update_status:FBTN" "bash \"$update_script\"" \
             --field="Switch Your Waybar:FBTN" "bash $waybar_script" \
-            --field="Wallpaper Selector:FBTN" "bash $wallpaper_selector_script" \
+            --field="Set Your Wallpaper:FBTN" "bash $wallpaper_selector_script" \
             --field="Maintenance:FBTN" "bash $cleanup_script" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
@@ -195,15 +195,8 @@ create_yad_dialog() {
         --no-cancel \
         --no-focus \
         --separator="," \
-        --timeout=0 & 
-
-    # DEBUG: Print the EXACT command that bash will send to yad
-    echo "DEBUG YAD CMD: $yad_cmd" >&2
-
-    # Execute the command from the variable
-    eval "$yad_cmd" &
+        --timeout=0 &
 }
-
 
 # Create Yad dialog
 create_yad_dialog
