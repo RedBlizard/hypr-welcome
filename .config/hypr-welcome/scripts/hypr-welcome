@@ -74,15 +74,16 @@ check_updates "$hypr_welcome_repo" && update_hypr_welcome=true
 check_updates "$hypr_waybar_repo"  && update_hypr_waybar=true
 check_updates "$hypr_blizz_repo"   && update_hypr_blizz=true
 
+# Count available updates using PREFIX increment (prevents exit status 1 issues)
 update_count=0
-$update_hypr_blizz   && ((update_count++))
-$update_hypr_welcome && ((update_count++))
-$update_hypr_waybar  && ((update_count++))
+$update_hypr_blizz   && ((++update_count))
+$update_hypr_welcome && ((++update_count))
+$update_hypr_waybar  && ((++update_count))
 
 if [ "$update_count" -gt 0 ]; then
-    # SAFE: Use Pango markup with hex color WITHOUT quotes
-    # This prevents quote-breaking in Yad's bash parser
-    update_status="<span foreground=#FF7F7F>  Hyprland updates: found</span>"
+    # Brilliant fix: Use single quotes inside double quotes for Pango.
+    # Inject $update_count directly into the string to show the exact number!
+    update_status="<span foreground='#FF7F7F'>  Hyprland updates: $update_count found</span>"
     
     # Smart choice: multiple updates -> Full Update, otherwise specific script
     if [ "$update_count" -gt 1 ]; then
@@ -95,10 +96,9 @@ if [ "$update_count" -gt 0 ]; then
         update_script="$hypr_waybar_update_script"
     fi
 else
-    # Plain text, no markup needed
     update_status="  Hyprland is up-to-date"
     
-    # IMPORTANT: ALWAYS a path to an executable script, never a command string!
+    # IMPORTANT: ALWAYS use a path to a script, never a command string!
     update_script="$HOME/.config/hypr-welcome/scripts/no_updates.sh"
 fi
 
