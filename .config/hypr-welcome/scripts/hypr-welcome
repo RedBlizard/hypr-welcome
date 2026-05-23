@@ -195,8 +195,15 @@ create_yad_dialog() {
         --no-cancel \
         --no-focus \
         --separator="," \
-        --timeout=0 &
+        --timeout=0 & 
+
+    # DEBUG: Print the EXACT command that bash will send to yad
+    echo "DEBUG YAD CMD: $yad_cmd" >&2
+
+    # Execute the command from the variable
+    eval "$yad_cmd" &
 }
+
 
 # Create Yad dialog
 create_yad_dialog
