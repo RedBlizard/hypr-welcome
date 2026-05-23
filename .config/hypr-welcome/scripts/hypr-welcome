@@ -39,17 +39,17 @@ check_network() {
 check_updates() {
     local repo_dir="$1"
     
-    # Check of de repo directory wel bestaat
+    # Check if the repo directory actually exists
     if [ ! -d "$repo_dir/.git" ]; then
         echo "Repo not found: $repo_dir" >&2
         return 1
     fi
     
-    # Use SUBSHELL ( ... ) zodat de 'cd' niet lekt naar de hoofdshell!
+    # Use a SUBSHELL ( ... ) so the 'cd' doesn't leak into the main shell!
     (
         cd "$repo_dir" || exit 1
         
-        # Timeout van 3 sec + quiet + verberg errors → GUI start snel en schoon
+        # 3 sec timeout + quiet + hide errors -> GUI starts fast and clean
         if ! timeout 3 git fetch origin main --quiet 2>/dev/null; then
             exit 1
         fi
@@ -58,9 +58,9 @@ check_updates() {
         commits_behind=$(git rev-list --count HEAD..origin/main 2>/dev/null)
         
         if [ "${commits_behind:-0}" -gt 0 ]; then
-            exit 0  # Updates beschikbaar
+            exit 0  # Updates available
         else
-            exit 1  # Geen updates
+            exit 1  # No updates
         fi
     )
 }
@@ -80,13 +80,13 @@ $update_hypr_welcome && ((update_count++))
 $update_hypr_waybar  && ((update_count++))
 
 if [ "$update_count" -gt 0 ]; then
-    # Show how many updates there are (user sees direct the scope)
-    update_status="<span foreground='#FF7F7F'>  Hyprland updates:found</span>"
+    # SAFE: Use Pango markup with hex color WITHOUT quotes
+    # This prevents quote-breaking in Yad's bash parser
+    update_status="<span foreground=#FF7F7F>  Hyprland updates: found</span>"
     
-    # Smart choice: by WITH more updates → run the "Full Update" (yad_update_dots.sh)
-    # With precise ONE update → only run specific script
+    # Smart choice: multiple updates -> Full Update, otherwise specific script
     if [ "$update_count" -gt 1 ]; then
-        update_script="$kitty_script"  # Dit is je "Full hypr Update" script
+        update_script="$kitty_script"
     elif $update_hypr_blizz; then
         update_script="$hypr_blizz_update_script"
     elif $update_hypr_welcome; then
@@ -95,9 +95,11 @@ if [ "$update_count" -gt 0 ]; then
         update_script="$hypr_waybar_update_script"
     fi
 else
+    # Plain text, no markup needed
     update_status="  Hyprland is up-to-date"
-    # fallback: show een notifycation in stead of just a empty command
-    update_script="notify-send 'Hyprland' 'All is already up-to-date! 🚀' -i '$logo_path'"
+    
+    # IMPORTANT: ALWAYS a path to an executable script, never a command string!
+    update_script="$HOME/.config/hypr-welcome/scripts/no_updates.sh"
 fi
 
 # Debug output
