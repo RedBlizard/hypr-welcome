@@ -117,37 +117,14 @@ fi
 read -rp "Do you want to update your dotfiles? (Enter 'Yy' for yes or 'Nn' for no): (Yy/Nn): " update_choice
 
 if [[ "$update_choice" =~ ^[Yy]$ ]]; then
-
-    # ============================================================
-    # Sync dotfiles from Hyprland-blizz (with delete to remove obsolete files)
-    # ============================================================
+    # Copy dotfiles and directories from Hyprland-blizz to home directory
     show_message "Updating dotfiles from Hyprland-blizz..." "$BLUE"
-
-    # Sync root-level files and directories (exclude hidden dirs to avoid wiping user data)
-    rsync -a --delete --exclude='.*' "$HOME/hyprland-dots/Hyprland-blizz/" "$HOME/" \
-        || { show_message "Failed to update root files from Hyprland-blizz." "$RED"; exit 1; }
-
-    # Sync hidden directories one by one to avoid deleting other user configs
-    rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.icons/" "$HOME/.icons/" \
-        || { show_message "Failed to update .icons from Hyprland-blizz." "$RED"; exit 1; }
-
-    rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.Kvantum-themes/" "$HOME/.Kvantum-themes/" \
-        || { show_message "Failed to update .Kvantum-themes from Hyprland-blizz." "$RED"; exit 1; }
-
-    rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.local/" "$HOME/.local/" \
-        || { show_message "Failed to update .local from Hyprland-blizz." "$RED"; exit 1; }
-
-    # Sync Pictures directory
-    rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/Pictures/" "$HOME/Pictures/" \
-        || { show_message "Failed to update Pictures from Hyprland-blizz." "$RED"; exit 1; }
-
-    # Sync .config subdirectories (only the ones managed by this repo)
-    for config_dir in alacritty btop cava dunst hypr kitty Kvantum networkmanager-dmenu nwg-look pacseek pipewire qt6ct ranger sddm-config-editor systemd Thunar waybar wlogout wofi xsettingsd gtk-2.0 gtk-3.0 gtk-4.0 starship swaync; do
-        if [ -d "$HOME/hyprland-dots/Hyprland-blizz/.config/$config_dir" ]; then
-            rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.config/$config_dir/" "$HOME/.config/$config_dir/" \
-                || { show_message "Failed to update $config_dir from Hyprland-blizz." "$RED"; exit 1; }
-        fi
-    done
+    cp -r "$HOME/hyprland-dots/Hyprland-blizz"/* ~/ || { show_message "Failed to update dotfiles from Hyprland-blizz." "$RED"; exit 1; }
+    cp -r "$HOME/hyprland-dots/Hyprland-blizz"/.icons ~/ || { show_message "Failed to update .icons from Hyprland-blizz." "$RED"; exit 1; }
+    cp -r "$HOME/hyprland-dots/Hyprland-blizz"/.Kvantum-themes ~/ || { show_message "Failed to update .Kvantum-themes from Hyprland-blizz." "$RED"; exit 1; }
+    cp -r "$HOME/hyprland-dots/Hyprland-blizz"/.local ~/ || { show_message "Failed to update .local from Hyprland-blizz." "$RED"; exit 1; }
+    cp -r "$HOME/hyprland-dots/Hyprland-blizz"/Pictures ~/ || { show_message "Failed to update Pictures from Hyprland-blizz." "$RED"; exit 1; }
+    cp -r "$HOME/hyprland-dots/Hyprland-blizz"/.config ~/ || { show_message "Failed to update .config from Hyprland-blizz." "$RED"; exit 1; }
 
 else
     show_message "No hyprland dotfiles update performed." "$BLUE"
