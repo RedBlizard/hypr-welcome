@@ -1,8 +1,7 @@
 #!/bin/bash
 
 # Step 1: Start waytrogen
-sleep 1
-hyprctl dispatch exec "[workspace 8] waytrogen"
+waytrogen &
 
 # Store the PID of waytrogen
 waytrogen_pid=$!
