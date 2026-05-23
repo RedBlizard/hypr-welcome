@@ -119,9 +119,9 @@ fi
 read -rp "Do you want to update your dotfiles? (Enter 'Yy' for yes or 'Nn' for no): (Yy/Nn): " update_choice
 
 if [[ "$update_choice" =~ ^[Yy]$ ]]; then
-    # Copy dotfiles and directories from hypr-waybar to home directory
+    # Sync dotfiles from hypr-waybar to home directory (with delete to remove obsolete files)
     show_message "Updating dotfiles from hypr-waybar..." "$BLUE"
-    cp -r "$HOME/hyprland-dots/hypr-waybar"/.config ~/ || { show_message "Failed to update .config from hypr-waybar." "$RED"; exit 1; }
+    rsync -a --delete "$HOME/hyprland-dots/hypr-waybar/.config/waybar/" "$HOME/.config/waybar/" || { show_message "Failed to update .config from hypr-waybar." "$RED"; exit 1; }
 else
     show_message "No waybar dotfiles update performed." "$BLUE"
     exit 0

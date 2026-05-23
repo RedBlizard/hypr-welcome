@@ -75,9 +75,9 @@ show_message() {
     echo -e "${color}${message}${NC}"
 }
 
-show_message "░█─░█ █──█ █▀▀█ █▀▀█ █── █▀▀█ █▀▀▄ █▀▀▄ 　 █▀▀▄ █▀▀█ ▀▀█▀▀ █▀▀ 　 █──█ █▀▀█ █▀▀▄ █▀▀█ ▀▀█▀▀ █▀▀" "$RED"
-show_message "░█▀▀█ █▄▄█ █──█ █▄▄▀ █── █▄▄█ █──█ █──█ 　 █──█ █──█ ──█── ▀▀█ 　 █──█ █──█ █──█ █▄▄█ ──█── █▀▀" "$RED"
-show_message "░█─░█ ▄▄▄█ █▀▀▀ ▀─▀▀ ▀▀▀ ▀──▀ ▀──▀ ▀▀▀─ 　 ▀▀▀─ ▀▀▀▀ ──▀── ▀▀▀ 　 ─▀▀▀ █▀▀▀ ▀▀▀─ ▀──▀ ──▀── ▀▀▀" "$RED"
+show_message "░█─░█ █──█ █▀▀█ █▀▀█ █── █▀▀█ █▀▀▄ █▀▀▄   █▀▀▄ █▀▀█ ▀▀█▀▀ █▀▀   █──█ █▀▀█ █▀▀▄ █▀▀█ ▀▀█▀▀ █▀▀" "$RED"
+show_message "░█▀▀█ █▄▄█ █──█ █▄▄▀ █── █▄▄█ █──█ █──█   █──█ █▄▄█ ──█── ▀▀█   █──█ █──█ █──█ █▄▄█ ──█── █▀▀" "$RED"
+show_message "░█─░█ ▄▄▄█ █▀▀▀ ▀─▀▀ ▀▀▀ ▀──▀ ▀──▀ ▀▀▀─   ▀▀▀─ ▀▀▀▀ ──▀── ▀▀▀   ─▀▀▀ █▀▀▀ ▀▀▀─ ▀──▀ ──▀── ▀▀▀" "$RED"
 echo
 
 # Clone or update the repositories
@@ -103,7 +103,6 @@ updates_available=false
 for repo in "${REPOS[@]}"; do
     repo_name=$(basename "$repo" .git)
     repo_dir="$DOTFILES_DIR/$repo_name"
-
     if cd "$repo_dir" && git fetch origin main && [ "$(git rev-list --count HEAD..origin/main)" -gt 0 ]; then
         updates_available=true
         show_message "Updates are available for $repo_name repository." "$BLUE"
@@ -119,22 +118,52 @@ fi
 read -rp "Do you want to update your dotfiles? (Enter 'Yy' for yes or 'Nn' for no): (Yy/Nn): " update_choice
 
 if [[ "$update_choice" =~ ^[Yy]$ ]]; then
-    # Copy dotfiles and directories from Hyprland-blizz to home directory
+
+    # ============================================================
+    # Sync dotfiles from Hyprland-blizz (with delete to remove obsolete files)
+    # ============================================================
     show_message "Updating dotfiles from Hyprland-blizz..." "$BLUE"
-    cp -r "$HOME/hyprland-dots/Hyprland-blizz"/* ~/ || { show_message "Failed to update dotfiles from Hyprland-blizz." "$RED"; exit 1; }
-    cp -r "$HOME/hyprland-dots/Hyprland-blizz"/.icons ~/ || { show_message "Failed to update .icons from Hyprland-blizz." "$RED"; exit 1; }
-    cp -r "$HOME/hyprland-dots/Hyprland-blizz"/.Kvantum-themes ~/ || { show_message "Failed to update .Kvantum-themes from Hyprland-blizz." "$RED"; exit 1; }
-    cp -r "$HOME/hyprland-dots/Hyprland-blizz"/.local ~/ || { show_message "Failed to update .local from Hyprland-blizz." "$RED"; exit 1; }
-    cp -r "$HOME/hyprland-dots/Hyprland-blizz"/Pictures ~/ || { show_message "Failed to update Pictures from Hyprland-blizz." "$RED"; exit 1; }
-    cp -r "$HOME/hyprland-dots/Hyprland-blizz"/.config ~/ || { show_message "Failed to update .config from Hyprland-blizz." "$RED"; exit 1; }
 
-    # Copy dotfiles and directories from hypr-welcome to home directory
+    # Sync root-level files and directories (exclude hidden dirs to avoid wiping user data)
+    rsync -a --delete --exclude='.*' "$HOME/hyprland-dots/Hyprland-blizz/" "$HOME/" \
+        || { show_message "Failed to update root files from Hyprland-blizz." "$RED"; exit 1; }
+
+    # Sync hidden directories one by one to avoid deleting other user configs
+    rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.icons/" "$HOME/.icons/" \
+        || { show_message "Failed to update .icons from Hyprland-blizz." "$RED"; exit 1; }
+
+    rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.Kvantum-themes/" "$HOME/.Kvantum-themes/" \
+        || { show_message "Failed to update .Kvantum-themes from Hyprland-blizz." "$RED"; exit 1; }
+
+    rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.local/" "$HOME/.local/" \
+        || { show_message "Failed to update .local from Hyprland-blizz." "$RED"; exit 1; }
+
+    # Sync Pictures directory
+    rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/Pictures/" "$HOME/Pictures/" \
+        || { show_message "Failed to update Pictures from Hyprland-blizz." "$RED"; exit 1; }
+
+    # Sync .config subdirectories (only the ones managed by this repo)
+    for config_dir in alacritty btop cava dunst hypr kitty Kvantum networkmanager-dmenu nwg-look pacseek pipewire qt6ct ranger sddm-config-editor systemd Thunar waybar wlogout wofi xsettingsd gtk-2.0 gtk-3.0 gtk-4.0 starship swaync; do
+        if [ -d "$HOME/hyprland-dots/Hyprland-blizz/.config/$config_dir" ]; then
+            rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.config/$config_dir/" "$HOME/.config/$config_dir/" \
+                || { show_message "Failed to update $config_dir from Hyprland-blizz." "$RED"; exit 1; }
+        fi
+    done
+
+    # ============================================================
+    # Sync dotfiles from hypr-welcome (with delete to remove obsolete files)
+    # ============================================================
     show_message "Updating dotfiles from hypr-welcome..." "$BLUE"
-    cp -r "$HOME/hyprland-dots/hypr-welcome"/.config ~/ || { show_message "Failed to update .config from hypr-welcome." "$RED"; exit 1; }
+    rsync -a --delete "$HOME/hyprland-dots/hypr-welcome/.config/hypr-welcome/" "$HOME/.config/hypr-welcome/" \
+        || { show_message "Failed to update .config/hypr-welcome." "$RED"; exit 1; }
 
-    # Copy dotfiles and directories from hypr-waybar to home directory
+    # ============================================================
+    # Sync dotfiles from hypr-waybar (with delete to remove obsolete files)
+    # ============================================================
     show_message "Updating dotfiles from hypr-waybar..." "$BLUE"
-    cp -r "$HOME/hyprland-dots/hypr-waybar"/.config ~/ || { show_message "Failed to update .config from hypr-waybar." "$RED"; exit 1; }
+    rsync -a --delete "$HOME/hyprland-dots/hypr-waybar/.config/waybar/" "$HOME/.config/waybar/" \
+        || { show_message "Failed to update .config/waybar." "$RED"; exit 1; }
+
 else
     show_message "No dotfiles update performed." "$BLUE"
     exit 0
@@ -148,11 +177,11 @@ fi
 # Change to the home directory
 cd "$HOME" || { echo 'Failed to change directory to home directory.'; exit 1; }
 
-# Cleanup
-rm -rf $HOME/README.md
-rm -rf $HOME/sddm-images
-rm -rf $HOME/LICENSE
-rm -rf $HOME/sddm.conf
+# Cleanup leftover files from root-level rsync that shouldn't be in $HOME
+rm -rf "$HOME/README.md"
+rm -rf "$HOME/sddm-images"
+rm -rf "$HOME/LICENSE"
+rm -rf "$HOME/sddm.conf"
 
 # Change to the scripts directory
 cd "$HOME/.config/hypr-welcome/scripts" || { echo "Failed to change to the scripts directory." >&2; exit 1; }
@@ -161,14 +190,14 @@ cd "$HOME/.config/hypr-welcome/scripts" || { echo "Failed to change to the scrip
 check_symlinks() {
     local symlinks=("hypr-welcome" "hypr-eos-kill-yad-zombies" "hypr_check_updates")
     local all_exist=true
-    
+
     for symlink in "${symlinks[@]}"; do
         if [ ! -L "/usr/bin/$symlink" ]; then
             all_exist=false
             break
         fi
     done
-    
+
     if $all_exist; then
         echo "All required symlinks exist."
         return 0
@@ -181,38 +210,31 @@ check_symlinks() {
 # Check if the symlinks exist
 if ! check_symlinks; then
     echo "Creating missing symlinks..."
-    
+
     # Change to the scripts directory
     cd "$HOME/.config/hypr-welcome/scripts" || { echo "Failed to change to the scripts directory." >&2; exit 1; }
 
     # Path to your welcome script
     welcome_script="$HOME/.config/hypr-welcome/scripts/hypr-welcome"
-
     # Path to the symlink in /usr/bin
     symlink="/usr/bin/hypr-welcome"
-
     # Create new symlink
     sudo ln -sf "$welcome_script" "$symlink"
 
     # Path to your kill script
     kill_script="$HOME/.config/hypr-welcome/scripts/hypr-eos-kill-yad-zombies"
-
     # Path to the symlink in /usr/bin
     symlink="/usr/bin/hypr-eos-kill-yad-zombies"
-
     # Create new symlink
     sudo ln -sf "$kill_script" "$symlink"
 
     # Path to your update script
     update_script="$HOME/.config/hypr-welcome/scripts/hypr_check_updates.sh"
-
     # Path to the symlink in /usr/bin
     symlink="/usr/bin/hypr_check_updates"
-
     # Create new symlink
     sudo ln -sf "$update_script" "$symlink"
 fi
 
 # Notify user about the end of the script
 notify-send "We are done. Enjoy your updated Hyprland experience."
-
