@@ -1,75 +1,56 @@
 #!/bin/bash
+# Runs startup configurators once (flagged) per user session.
+# Prevents re-running if the flag file already exists.
 
-# creates flag for the monitor_workspaces_configurator script
+run_flagged() {
+    local lock_file="$1"
+    local job_name="$2"
+    local job_cmd="$3"
 
-# Define the lock file
-lock_file="$HOME/.config/hypr/scripts/monitor_workspaces_flag"
+    # Ensure the directory for the flag file exists
+    # This fixes the issue when hypr-welcome/scripts/ doesn't exist yet
+    mkdir -p "$(dirname "$lock_file")"
 
-# Check if the lock file exists
-if [ -e "$lock_file" ]; then
-    echo "monitor_workspaces_configurator has already run. Exiting."
-    exit 1
-fi
-# Your script's code goes here
-echo "Starting monitor_workspaces_configurator script..."
-# This is where you would put the actual commands you want your script to run
-# Example:
-# ./path/to/yad_switch-waybar-config.sh
-$HOME/.config/hypr/scripts/monitor_workspaces_configurator.sh
+    # Check if the lock file already exists
+    if [ -e "$lock_file" ]; then
+        echo "$job_name has already run. Skipping."
+        return 0   # Continue to the next task, do not exit the whole script
+    fi
 
-# Create the lock file
-echo "Creating flag file..."
-touch "$lock_file"
+    echo "Starting $job_name..."
 
-echo "monitor_workspaces_configurator script completed successfully."
+    # Check if the target script exists and is executable
+    if [ -x "$job_cmd" ]; then
+        "$job_cmd"
+    else
+        echo "⚠  Warning: $job_cmd is not executable or does not exist!"
+        return 1
+    fi
 
-# creates flag for the yad_switch-waybar-config script
+    # Create the lock file
+    touch "$lock_file"
+    echo "$job_name completed successfully."
+}
+
+# 1. Monitor workspaces configurator
+run_flagged \
+    "$HOME/.config/hypr/scripts/monitor_workspaces_flag" \
+    "monitor_workspaces_configurator" \
+    "$HOME/.config/hypr/scripts/monitor_workspaces_configurator.sh"
 
 sleep 2
 
-# Define the lock file
-lock_file="$HOME/.config/waybar/scripts/waybar_flag"
-
-# Check if the lock file exists
-if [ -e "$lock_file" ]; then
-    echo "yad_switch-waybar-config script has already run. Exiting."
-    exit 1
-fi
-# Your script's code goes here
-echo "Starting yad_switch-waybar-config script..."
-# This is where you would put the actual commands you want your script to run
-# Example:
-# ./path/to/yad_switch-waybar-config.sh
-$HOME/.config/waybar/scripts/yad_switch-waybar-config.sh
-
-# Create the lock file
-echo "Creating flag file..."
-touch "$lock_file"
-
-echo "yad_switch-waybar-config script completed successfully."
+# 2. Waybar config switcher
+run_flagged \
+    "$HOME/.config/waybar/scripts/waybar_flag" \
+    "yad_switch-waybar-config" \
+    "$HOME/.config/waybar/scripts/yad_switch-waybar-config.sh"
 
 sleep 4
 
-# creates flag for the hypr-welcome script
-
-# Define the lock file
-lock_file="$HOME/.config/hypr/scripts/welcome_flag"
-
-# Check if the lock file exists
-if [ -e "$lock_file" ]; then
-    echo "Welcome script has already run. Exiting."
-    exit 1
-fi
-
-# Your script's code goes here
-echo "Starting hypr-welcome script..."
-# This is where you would put the actual commands you want your script to run
-# Example:
-# ./path/to/hypr-welcome.sh
-$HOME/.config/hypr-welcome/scripts/hypr-welcome
-
-# Create the lock file
-echo "Creating flag file..."
-touch "$lock_file"
-
-echo "Hypr-welcome script completed successfully."
+# 3. Hypr-welcome (now in its own dedicated config directory)
+# mkdir -p inside run_flagged ensures ~/.config/hypr-welcome/scripts/ exists
+run_flagged \
+    "$HOME/.config/hypr-welcome/scripts/welcome_flag" \
+    "hypr-welcome" \
+    "$HOME/.config/hypr-welcome/scripts/hypr-welcome"
