@@ -119,22 +119,41 @@ fi
 read -rp "Do you want to update your dotfiles? (Enter 'Yy' for yes or 'Nn' for no): (Yy/Nn): " update_choice
 
 if [[ "$update_choice" =~ ^[Yy]$ ]]; then
-    # Copy dotfiles and directories from Hyprland-blizz to home directory
+    # ============================================================
+    # SAFE: Sync Hyprland-blizz (specific subdirectories only)
+    # ============================================================
     show_message "Updating dotfiles from Hyprland-blizz..." "$BLUE"
-    cp -r "$HOME/hyprland-dots/Hyprland-blizz"/* ~/ || { show_message "Failed to update dotfiles from Hyprland-blizz." "$RED"; exit 1; }
-    cp -r "$HOME/hyprland-dots/Hyprland-blizz"/.icons ~/ || { show_message "Failed to update .icons from Hyprland-blizz." "$RED"; exit 1; }
-    cp -r "$HOME/hyprland-dots/Hyprland-blizz"/.Kvantum-themes ~/ || { show_message "Failed to update .Kvantum-themes from Hyprland-blizz." "$RED"; exit 1; }
-    cp -r "$HOME/hyprland-dots/Hyprland-blizz"/.local ~/ || { show_message "Failed to update .local from Hyprland-blizz." "$RED"; exit 1; }
-    cp -r "$HOME/hyprland-dots/Hyprland-blizz"/Pictures ~/ || { show_message "Failed to update Pictures from Hyprland-blizz." "$RED"; exit 1; }
-    cp -r "$HOME/hyprland-dots/Hyprland-blizz"/.config ~/ || { show_message "Failed to update .config from Hyprland-blizz." "$RED"; exit 1; }
+    
+    rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.icons/" "$HOME/.icons/" \
+        || { show_message "Failed to update .icons." "$RED"; exit 1; }
+    rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.Kvantum-themes/" "$HOME/.Kvantum-themes/" \
+        || { show_message "Failed to update .Kvantum-themes." "$RED"; exit 1; }
+    rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.local/" "$HOME/.local/" \
+        || { show_message "Failed to update .local." "$RED"; exit 1; }
+    rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/Pictures/" "$HOME/Pictures/" \
+        || { show_message "Failed to update Pictures." "$RED"; exit 1; }
+    
+    for config_dir in alacritty btop cava dunst hypr kitty Kvantum networkmanager-dmenu nwg-look pacseek pipewire qt6ct ranger sddm-config-editor systemd Thunar waybar wlogout wofi xsettingsd gtk-2.0 gtk-3.0 gtk-4.0 starship swaync; do
+        if [ -d "$HOME/hyprland-dots/Hyprland-blizz/.config/$config_dir" ]; then
+            rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.config/$config_dir/" "$HOME/.config/$config_dir/" \
+                || { show_message "Failed to update $config_dir." "$RED"; exit 1; }
+        fi
+    done
 
-    # Copy dotfiles and directories from hypr-welcome to home directory
+    # ============================================================
+    # SAFE: Sync hypr-welcome (only .config/hypr-welcome)
+    # ============================================================
     show_message "Updating dotfiles from hypr-welcome..." "$BLUE"
-    cp -r "$HOME/hyprland-dots/hypr-welcome"/.config ~/ || { show_message "Failed to update .config from hypr-welcome." "$RED"; exit 1; }
+    rsync -a --delete "$HOME/hyprland-dots/hypr-welcome/.config/hypr-welcome/" "$HOME/.config/hypr-welcome/" \
+        || { show_message "Failed to update .config/hypr-welcome." "$RED"; exit 1; }
 
-    # Copy dotfiles and directories from hypr-waybar to home directory
+    # ============================================================
+    # SAFE: Sync hypr-waybar (only .config/waybar)
+    # ============================================================
     show_message "Updating dotfiles from hypr-waybar..." "$BLUE"
-    cp -r "$HOME/hyprland-dots/hypr-waybar"/.config ~/ || { show_message "Failed to update .config from hypr-waybar." "$RED"; exit 1; }
+    rsync -a --delete "$HOME/hyprland-dots/hypr-waybar/.config/waybar/" "$HOME/.config/waybar/" \
+        || { show_message "Failed to update .config/waybar." "$RED"; exit 1; }
+
 else
     show_message "No dotfiles update performed." "$BLUE"
     exit 0
@@ -215,4 +234,3 @@ fi
 
 # Notify user about the end of the script
 notify-send "We are done. Enjoy your updated Hyprland experience."
-

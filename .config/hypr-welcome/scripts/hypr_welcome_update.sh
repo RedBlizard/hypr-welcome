@@ -121,10 +121,10 @@ fi
 read -rp "Do you want to update your dotfiles? (Enter 'Yy' for yes or 'Nn' for no): (Yy/Nn): " update_choice
 
 if [[ "$update_choice" =~ ^[Yy]$ ]]; then
-    # Copy dotfiles and directories from hypr-welcome to home directory
+    # SAFE: Sync only .config/hypr-welcome (with delete to remove obsolete files)
     show_message "Updating dotfiles from hypr-welcome..." "$BLUE"
-    cp -r "$HOME/hyprland-dots/hypr-welcome"/.config ~/ || { show_message "Failed to update .config from hypr-welcome." "$RED"; exit 1; }
-
+    rsync -a --delete "$HOME/hyprland-dots/hypr-welcome/.config/hypr-welcome/" "$HOME/.config/hypr-welcome/" \
+        || { show_message "Failed to update .config/hypr-welcome." "$RED"; exit 1; }
 else
     show_message "No hypr-welcome update performed." "$BLUE"
     exit 0
@@ -205,4 +205,3 @@ fi
 
 # Notify user about the end of the script
 notify-send "We are done. Enjoy your updated Hyprland experience."
-
