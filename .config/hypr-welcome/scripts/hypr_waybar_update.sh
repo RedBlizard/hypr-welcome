@@ -119,25 +119,25 @@ fi
 read -rp "Do you want to update your dotfiles? (Enter 'Yy' for yes or 'Nn' for no): (Yy/Nn): " update_choice
 
 if [[ "$update_choice" =~ ^[Yy]$ ]]; then
-    # === BEWAAR ACTIEVE WAYBAR CONFIG EN FLAG VOOR UPDATE ===
+    # === PRESERVE ACTIVE WAYBAR CONFIG AND FLAG BEFORE UPDATE ===
     WAYBAR_CONFIG_LINK="$HOME/.config/waybar/config.jsonc"
     WAYBAR_FLAG="$HOME/.config/waybar/scripts/waybar_flag"
     active_config=""
     flag_backup=""
 
-    # Sla het actieve config pad op (symlink heeft voorkeur)
+    # Save the active config path (symlink preferred)
     if [ -L "$WAYBAR_CONFIG_LINK" ]; then
         active_config=$(readlink "$WAYBAR_CONFIG_LINK")
-        show_message "Actieve waybar config onthouden: $active_config" "$GREEN"
+        show_message "Active waybar config saved: $active_config" "$GREEN"
     elif [ -f "$WAYBAR_CONFIG_LINK" ]; then
-        show_message "Waybar config is geen symlink, config-keuze wordt niet hersteld." "$BLUE"
+        show_message "Waybar config is not a symlink, config choice will not be restored." "$BLUE"
     fi
 
-    # Bewaar de waybar_flag zodat welcome.sh niet opnieuw triggert
+    # Backup the waybar_flag so welcome.sh does not re-trigger
     if [ -f "$WAYBAR_FLAG" ]; then
         flag_backup=$(mktemp)
         cp "$WAYBAR_FLAG" "$flag_backup"
-        show_message "waybar_flag tijdelijk bewaard." "$GREEN"
+        show_message "waybar_flag temporarily backed up." "$GREEN"
     fi
     # =========================================================
 
@@ -150,20 +150,20 @@ if [[ "$update_choice" =~ ^[Yy]$ ]]; then
     rsync -a --delete "$HOME/hyprland-dots/hypr-waybar/.config/waybar/" "$HOME/.config/waybar/" \
         || { show_message "Failed to update .config/waybar." "$RED"; waybar & disown; exit 1; }
 
-    # === HERSTEL ACTIEVE WAYBAR CONFIG EN FLAG NA UPDATE ===
-    # Zet de gekozen config symlink terug
+    # === RESTORE ACTIVE WAYBAR CONFIG AND FLAG AFTER UPDATE ===
+    # Restore the chosen config symlink
     if [ -n "$active_config" ]; then
         ln -sf "$active_config" "$WAYBAR_CONFIG_LINK" \
             && show_message "Waybar config restored to: $active_config" "$GREEN" \
-            || show_message "We could not restore the waybar config symlink!" "$RED"
+            || show_message "Failed to restore waybar config symlink!" "$RED"
     fi
 
-    # Zet de waybar_flag terug zodat welcome.sh niet reset
+    # Restore the waybar_flag so welcome.sh does not reset
     if [ -n "$flag_backup" ]; then
         mkdir -p "$(dirname "$WAYBAR_FLAG")"
         cp "$flag_backup" "$WAYBAR_FLAG"
         rm -f "$flag_backup"
-        show_message "waybar_flag hersteld." "$GREEN"
+        show_message "waybar_flag restored." "$GREEN"
     fi
     # =========================================================
 
@@ -251,5 +251,3 @@ fi
 
 # Notify user about the end of the script
 notify-send "We are done. Enjoy your updated Hyprland experience."
-
-sleep 2 && waybar
