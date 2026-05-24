@@ -142,6 +142,30 @@ if [[ "$update_choice" =~ ^[Yy]$ ]]; then
                 || { show_message "Failed to update $config_dir from Hyprland-blizz." "$RED"; exit 1; }
         fi
     done
+    # ============================================================
+    # Place session flags (hypr only — waybar and hypr-welcome excluded)
+    # Flags from welcome.sh:
+    #   - monitor_workspaces_configurator
+    # Flags from monitor_workspaces_configurator.sh:
+    #   - first-time execution
+    #   - one-time execution
+    # ============================================================
+    show_message "Placing session flags (hypr only)..." "$BLUE"
+
+    declare -a FLAGS=(
+        "$HOME/.config/hypr/scripts/monitor_workspaces_flag"
+        "$HOME/.config/hypr/scripts/execution_flag"
+        "$HOME/.config/hypr/scripts/execution_once_flag"
+    )
+
+    for flag in "${FLAGS[@]}"; do
+        mkdir -p "$(dirname "$flag")"
+        touch "$flag" && show_message "  ✔ Placed: $flag" "$GREEN" \
+            || show_message "  ✖ Failed to place: $flag" "$RED"
+    done
+
+    show_message "Hypr flags placed. Waybar and hypr-welcome configurators are unaffected." "$GREEN"
+
 else
     show_message "No hyprland dotfiles update performed." "$BLUE"
     exit 0

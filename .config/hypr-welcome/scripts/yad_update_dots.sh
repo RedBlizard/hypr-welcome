@@ -154,6 +154,34 @@ if [[ "$update_choice" =~ ^[Yy]$ ]]; then
     rsync -a --delete "$HOME/hyprland-dots/hypr-waybar/.config/waybar/" "$HOME/.config/waybar/" \
         || { show_message "Failed to update .config/waybar." "$RED"; exit 1; }
 
+    # ============================================================
+    # Place session flags so configurators do NOT re-run next login
+    # Flags from welcome.sh:
+    #   - monitor_workspaces_configurator
+    #   - yad_switch-waybar-config
+    #   - hypr-welcome
+    # Flags from monitor_workspaces_configurator.sh:
+    #   - first-time execution
+    #   - one-time execution
+    # ============================================================
+    show_message "Placing session flags to prevent re-running configurators..." "$BLUE"
+
+    declare -a FLAGS=(
+        "$HOME/.config/hypr/scripts/monitor_workspaces_flag"
+        "$HOME/.config/waybar/scripts/waybar_flag"
+        "$HOME/.config/hypr-welcome/scripts/welcome_flag"
+        "$HOME/.config/hypr/scripts/execution_flag"
+        "$HOME/.config/hypr/scripts/execution_once_flag"
+    )
+
+    for flag in "${FLAGS[@]}"; do
+        mkdir -p "$(dirname "$flag")"
+        touch "$flag" && show_message "  ✔ Placed: $flag" "$GREEN" \
+            || show_message "  ✖ Failed to place: $flag" "$RED"
+    done
+
+    show_message "All flags placed. Configurators will be skipped on next session." "$GREEN"
+
 else
     show_message "No dotfiles update performed." "$BLUE"
     exit 0
