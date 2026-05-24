@@ -154,8 +154,8 @@ if [[ "$update_choice" =~ ^[Yy]$ ]]; then
     # Zet de gekozen config symlink terug
     if [ -n "$active_config" ]; then
         ln -sf "$active_config" "$WAYBAR_CONFIG_LINK" \
-            && show_message "Waybar config hersteld naar: $active_config" "$GREEN" \
-            || show_message "Kon waybar config symlink niet herstellen!" "$RED"
+            && show_message "Waybar config restored to: $active_config" "$GREEN" \
+            || show_message "We could not restore the waybar config symlink!" "$RED"
     fi
 
     # Zet de waybar_flag terug zodat welcome.sh niet reset
@@ -251,3 +251,5 @@ fi
 
 # Notify user about the end of the script
 notify-send "We are done. Enjoy your updated Hyprland experience."
+
+sleep 2 && waybar
