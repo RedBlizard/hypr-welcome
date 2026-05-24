@@ -119,10 +119,49 @@ fi
 read -rp "Do you want to update your dotfiles? (Enter 'Yy' for yes or 'Nn' for no): (Yy/Nn): " update_choice
 
 if [[ "$update_choice" =~ ^[Yy]$ ]]; then
+    # === BEWAAR ACTIEVE WAYBAR CONFIG EN FLAG VOOR UPDATE ===
+    WAYBAR_CONFIG_LINK="$HOME/.config/waybar/config.jsonc"
+    WAYBAR_FLAG="$HOME/.config/waybar/scripts/waybar_flag"
+    active_config=""
+    flag_backup=""
+
+    # Sla het actieve config pad op (symlink heeft voorkeur)
+    if [ -L "$WAYBAR_CONFIG_LINK" ]; then
+        active_config=$(readlink "$WAYBAR_CONFIG_LINK")
+        show_message "Actieve waybar config onthouden: $active_config" "$GREEN"
+    elif [ -f "$WAYBAR_CONFIG_LINK" ]; then
+        show_message "Waybar config is geen symlink, config-keuze wordt niet hersteld." "$BLUE"
+    fi
+
+    # Bewaar de waybar_flag zodat welcome.sh niet opnieuw triggert
+    if [ -f "$WAYBAR_FLAG" ]; then
+        flag_backup=$(mktemp)
+        cp "$WAYBAR_FLAG" "$flag_backup"
+        show_message "waybar_flag tijdelijk bewaard." "$GREEN"
+    fi
+    # =========================================================
+
     # SAFE: Sync only .config/waybar (with delete to remove obsolete files)
     show_message "Updating dotfiles from hypr-waybar..." "$BLUE"
     rsync -a --delete "$HOME/hyprland-dots/hypr-waybar/.config/waybar/" "$HOME/.config/waybar/" \
         || { show_message "Failed to update .config/waybar." "$RED"; exit 1; }
+
+    # === HERSTEL ACTIEVE WAYBAR CONFIG EN FLAG NA UPDATE ===
+    # Zet de gekozen config symlink terug
+    if [ -n "$active_config" ]; then
+        ln -sf "$active_config" "$WAYBAR_CONFIG_LINK" \
+            && show_message "Waybar config hersteld naar: $active_config" "$GREEN" \
+            || show_message "Kon waybar config symlink niet herstellen!" "$RED"
+    fi
+
+    # Zet de waybar_flag terug zodat welcome.sh niet reset
+    if [ -n "$flag_backup" ]; then
+        mkdir -p "$(dirname "$WAYBAR_FLAG")"
+        cp "$flag_backup" "$WAYBAR_FLAG"
+        rm -f "$flag_backup"
+        show_message "waybar_flag hersteld." "$GREEN"
+    fi
+    # =========================================================
 else
     show_message "No waybar dotfiles update performed." "$BLUE"
     exit 0
