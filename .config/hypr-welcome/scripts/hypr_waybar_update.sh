@@ -141,10 +141,14 @@ if [[ "$update_choice" =~ ^[Yy]$ ]]; then
     fi
     # =========================================================
 
+    # Kill Waybar before updating to avoid file-in-use conflicts
+    show_message "Stopping Waybar before update..." "$BLUE"
+    pkill -x waybar && sleep 1
+
     # SAFE: Sync only .config/waybar (with delete to remove obsolete files)
     show_message "Updating dotfiles from hypr-waybar..." "$BLUE"
     rsync -a --delete "$HOME/hyprland-dots/hypr-waybar/.config/waybar/" "$HOME/.config/waybar/" \
-        || { show_message "Failed to update .config/waybar." "$RED"; exit 1; }
+        || { show_message "Failed to update .config/waybar." "$RED"; waybar & disown; exit 1; }
 
     # === HERSTEL ACTIEVE WAYBAR CONFIG EN FLAG NA UPDATE ===
     # Zet de gekozen config symlink terug
@@ -162,6 +166,11 @@ if [[ "$update_choice" =~ ^[Yy]$ ]]; then
         show_message "waybar_flag hersteld." "$GREEN"
     fi
     # =========================================================
+
+    # Restart Waybar with the restored config
+    show_message "Restarting Waybar..." "$BLUE"
+    waybar & disown
+    show_message "Waybar restarted successfully." "$GREEN"
 else
     show_message "No waybar dotfiles update performed." "$BLUE"
     exit 0
