@@ -29,7 +29,7 @@ run_flagged() {
 }
 
 # ----------------------------
-# HYPR WELCOME (already fixed)
+# HYPR WELCOME
 # ----------------------------
 run_welcome() {
     local lock_file="$HOME/.config/hypr-welcome/scripts/welcome_flag"
@@ -57,25 +57,19 @@ run_welcome() {
 }
 
 # ----------------------------
-# WAYBAR SWITCHER (MANUAL ONLY)
+# WAYBAR SWITCHER
+# Does NOT start automatically — the "Pick Your Waybar" button
+# in hypr-welcome calls yad_switch-waybar-config directly.
+# This function only ensures that the flag directory exists.
 # ----------------------------
 run_waybar_switcher() {
-    local lock_file="$HOME/.config/waybar/scripts/waybar_flag"
-    local job_cmd="$HOME/.config/waybar/scripts/yad_switch-waybar-config.sh"
-
-    mkdir -p "$(dirname "$lock_file")"
-
-    if [ -e "$lock_file" ]; then
-        echo "waybar switcher already used. Skipping."
-        return 0
-    fi
-
-    echo "Waybar switcher ready (manual trigger only)"
-    return 0
+    local lock_dir="$HOME/.config/waybar/scripts"
+    mkdir -p "$lock_dir"
+    echo "Waybar switcher flag directory ready (triggered via hypr-welcome button)."
 }
 
 # ----------------------------
-# 1. Monitor workspaces configurator (KEEP AS IS)
+# 1. Monitor workspaces configurator
 # ----------------------------
 run_flagged \
     "$HOME/.config/hypr/scripts/monitor_workspaces_flag" \
@@ -85,7 +79,7 @@ run_flagged \
 sleep 2
 
 # ----------------------------
-# 2. WAYBAR (NO AUTO EXECUTION)
+# 2. WAYBAR (prepare flag director, no auto-start)
 # ----------------------------
 run_waybar_switcher
 
