@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Runs startup configurators once (flagged) per user session.
-# Prevents re-running if the flag file already exists.
-
 run_flagged() {
     local lock_file="$1"
     local job_name="$2"
@@ -22,15 +19,18 @@ run_flagged() {
             touch "$lock_file"
             echo "$job_name completed successfully."
         else
-            echo "⚠ Error: $job_cmd failed! Flag NOT set, will retry next session."
+            echo "⚠ Error: $job_cmd failed!"
             return 1
         fi
     else
-        echo "⚠ Warning: $job_cmd is not executable or does not exist!"
+        echo "⚠ Warning: $job_cmd not executable or missing!"
         return 1
     fi
 }
 
+# ----------------------------
+# HYPR WELCOME (already fixed)
+# ----------------------------
 run_welcome() {
     local lock_file="$HOME/.config/hypr-welcome/scripts/welcome_flag"
     local job_cmd="$HOME/.config/hypr-welcome/scripts/hypr-welcome"
@@ -38,38 +38,45 @@ run_welcome() {
     mkdir -p "$(dirname "$lock_file")"
 
     if [ -e "$lock_file" ]; then
-        echo "hypr-welcome has already run. Skipping."
+        echo "hypr-welcome already done."
         return 0
     fi
 
-    echo "Starting hypr-welcome..."
-
-    if [ ! -x "$job_cmd" ]; then
-        echo "⚠ Warning: $job_cmd is not executable or does not exist!"
-        return 1
-    fi
-
-    # Start hypr-welcome
     "$job_cmd"
 
-    echo "Waiting for hypr-welcome window..."
-
-    # Wait up to 10 seconds
     for i in {1..100}; do
         if hyprctl clients | grep -q "hypr-welcome"; then
             touch "$lock_file"
-            echo "hypr-welcome window detected. Flag created."
+            echo "hypr-welcome ready"
             return 0
         fi
-
         sleep 0.1
     done
 
-    echo "⚠ hypr-welcome window not detected. Flag NOT set."
-    return 1
+    echo "hypr-welcome not detected"
 }
 
-# 1. Monitor workspaces configurator
+# ----------------------------
+# WAYBAR SWITCHER (MANUAL ONLY)
+# ----------------------------
+run_waybar_switcher() {
+    local lock_file="$HOME/.config/waybar/scripts/waybar_flag"
+    local job_cmd="$HOME/.config/waybar/scripts/yad_switch-waybar-config.sh"
+
+    mkdir -p "$(dirname "$lock_file")"
+
+    if [ -e "$lock_file" ]; then
+        echo "waybar switcher already used. Skipping."
+        return 0
+    fi
+
+    echo "Waybar switcher ready (manual trigger only)"
+    return 0
+}
+
+# ----------------------------
+# 1. Monitor workspaces configurator (KEEP AS IS)
+# ----------------------------
 run_flagged \
     "$HOME/.config/hypr/scripts/monitor_workspaces_flag" \
     "monitor_workspaces_configurator" \
@@ -77,15 +84,16 @@ run_flagged \
 
 sleep 2
 
-# 2. Waybar config switcher
-run_flagged \
-    "$HOME/.config/waybar/scripts/waybar_flag" \
-    "yad_switch-waybar-config" \
-    "$HOME/.config/hypr-welcome/scripts/yad_switch-waybar-config"
+# ----------------------------
+# 2. WAYBAR (NO AUTO EXECUTION)
+# ----------------------------
+run_waybar_switcher
 
 sleep 4
 
-# 3. Hypr-welcome
+# ----------------------------
+# 3. HYPR WELCOME
+# ----------------------------
 run_welcome
 
 exit 0
