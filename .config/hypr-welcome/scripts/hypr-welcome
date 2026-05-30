@@ -194,10 +194,16 @@ create_yad_dialog() {
         --timeout=0 &
 }
 
-# Create Yad dialog
 create_yad_dialog
+
+# Wait for the hypr-welcome app to start
+while ! hyprctl clients | grep -q "hypr-welcome"; do
+    sleep 0.1
+done
 
 # Trap to clean up zombie processes
 trap "sleep 0.2 ; $HOME/.config/hypr-welcome/scripts/kill_zombies.sh --silent" EXIT
+
+touch "$HOME/.config/hypr-welcome/scripts/welcome_flag"
 
 exit 0
