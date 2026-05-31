@@ -1,15 +1,8 @@
 #!/bin/bash
 
-WAYBAR_FLAG="$HOME/.config/waybar/scripts/waybar_flag"
 logo_path="$HOME/.config/hypr-welcome/imgs/hypr-welcome.png"
 
 WAYBAR_CONFIGS=("Desktop" "Laptop" "Minimal")
-
-# If already configured, skip (optional safety)
-if [ -e "$WAYBAR_FLAG" ]; then
-    echo "Waybar already configured. Skipping."
-    exit 0
-fi
 
 selected_config=$(printf "%s\n" "${WAYBAR_CONFIGS[@]}" | yad \
     --list \
@@ -84,10 +77,4 @@ killall -q waybar
 while pgrep -x waybar >/dev/null; do sleep 0.2; done
 waybar & disown
 
-# ----------------------------
-# SET FLAG
-# ----------------------------
-mkdir -p "$(dirname "$WAYBAR_FLAG")"
-touch "$WAYBAR_FLAG"
-
-echo "Waybar configured: '$selected_config' — flag set."
+echo "Waybar configured: '$selected_config'."
