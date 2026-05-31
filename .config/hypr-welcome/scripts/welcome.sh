@@ -42,45 +42,26 @@ sleep 2
 
 # 2. Waybar config switcher
 run_flagged \
-    "$HOME/.config/hypr/scripts/monitor_workspaces_flag" \
-    "monitor_workspaces_configurator" \
-    "$HOME/.config/hypr/scripts/monitor_workspaces_configurator.sh"
+    "$HOME/.config/waybar/scripts/waybar_flag" \
+    "yad_switch-waybar-config" \
+    "$HOME/.config/waybar/scripts/yad_switch-waybar-config.sh"
 
 sleep 4
 
 # 3. Hypr-welcome (now in its own dedicated config directory)
 # mkdir -p inside run_flagged ensures ~/.config/hypr-welcome/scripts/ exists
-# ----------------------------
-# HYPR WELCOME
-# ----------------------------
-run_welcome() {
-    local lock_file="$HOME/.config/hypr-welcome/scripts/welcome_flag"
-    local job_cmd="$HOME/.config/hypr-welcome/scripts/hypr-welcome"
- 
-    mkdir -p "$(dirname "$lock_file")"
- 
-    if [ -e "$lock_file" ]; then
-        echo "hypr-welcome already done."
-        return 0
-    fi
- 
-    "$job_cmd"
- 
-    for i in {1..100}; do
-        if hyprctl clients | grep -q "hypr-welcome"; then
-            touch "$lock_file"
-            echo "hypr-welcome ready"
-            return 0
-        fi
-        sleep 0.1
-    done
- 
-    echo "hypr-welcome not detected"
-}
+run_flagged \
+    "$HOME/.config/hypr-welcome/scripts/welcome_flag" \
+    "hypr-welcome" \
+    "$HOME/.config/hypr-welcome/scripts/hypr-welcome"
+
     
 # ----------------------------
 # 4. HYPR WELCOME
 # ----------------------------
-run_welcome
+
+sleep 5
+
+hypr-welcome
  
 exit 0    
