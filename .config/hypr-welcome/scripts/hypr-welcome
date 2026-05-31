@@ -204,6 +204,4 @@ done
 # Trap to clean up zombie processes
 trap "sleep 0.2 ; $HOME/.config/hypr-welcome/scripts/kill_zombies.sh --silent" EXIT
 
-touch "$HOME/.config/hypr-welcome/scripts/welcome_flag"
-
 exit 0
