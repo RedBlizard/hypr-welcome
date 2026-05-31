@@ -44,7 +44,7 @@ sleep 2
 run_flagged \
     "$HOME/.config/waybar/scripts/waybar_flag" \
     "yad_switch-waybar-config" \
-    "$HOME/.config/waybar/scripts/yad_switch-waybar-config.sh"
+    "$HOME/.config/hypr-welcome/scripts/yad_switch-waybar-config"
 
 sleep 4
 
