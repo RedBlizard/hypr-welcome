@@ -78,3 +78,14 @@ while pgrep -x waybar >/dev/null; do sleep 0.2; done
 waybar & disown
 
 echo "Waybar configured: '$selected_config'."
+
+# ----------------------------
+# SET RUN-ONCE FLAG
+# Deze flag is uitsluitend voor welcome.sh — die checkt hem bij boot
+# om de waybar-stap over te slaan als die al een keer gedaan is.
+# Dit script zelf checkt de flag NOOIT — de knop in hypr-welcome
+# opent dit script altijd gewoon, ook als de flag al bestaat.
+# ----------------------------
+WAYBAR_FLAG="$HOME/.config/waybar/scripts/waybar_flag"
+mkdir -p "$(dirname "$WAYBAR_FLAG")"
+touch "$WAYBAR_FLAG"
