@@ -1,16 +1,29 @@
 #!/bin/bash
 
 # ----------------------------
-# GENERIC RUN-ONCE FUNCTION
+# GENERIC RUN-ONCE FUNCTION (MULTIPLE FLAGS SUPPORT)
 # ----------------------------
 run_flagged() {
-    local lock_file="$1"
-    local job_name="$2"
-    local job_cmd="$3"
+    local job_name="$1"
+    local job_cmd="$2"
+    shift 2
+    local lock_files=("$@")
     
-    mkdir -p "$(dirname "$lock_file")"
+    # Create directories for all flags
+    for lock_file in "${lock_files[@]}"; do
+        mkdir -p "$(dirname "$lock_file")"
+    done
     
-    if [ -e "$lock_file" ]; then
+    # Check if ALL flags exist (if so, the job has already run)
+    local all_exist=true
+    for lock_file in "${lock_files[@]}"; do
+        if [ ! -e "$lock_file" ]; then
+            all_exist=false
+            break
+        fi
+    done
+    
+    if [ "$all_exist" = true ]; then
         echo "$job_name has already run. Skipping."
         return 0
     fi
@@ -19,10 +32,13 @@ run_flagged() {
     if [ -x "$job_cmd" ]; then
         # Wait for the script to fully complete (including any GUI dialogs)
         if "$job_cmd"; then
-            touch "$lock_file"
-            echo "$job_name completed successfully, flag placed."
+            # Touch all flags upon successful completion
+            for lock_file in "${lock_files[@]}"; do
+                touch "$lock_file"
+            done
+            echo "$job_name completed successfully, all flags placed."
         else
-            echo "⚠ Error: $job_cmd failed! No flag placed."
+            echo "⚠ Error: $job_cmd failed! No flags placed."
             return 1
         fi
     else
@@ -93,11 +109,13 @@ run_waybar_switcher() {
 # ==========================================
 
 # 1. Monitor workspaces configurator
-# (Now waits properly until the script and any yad dialogs are fully completed)
+# Now passes all three required flags to the run_flagged function
 run_flagged \
-    "$HOME/.cache/run_once_flags/monitor_workspaces_flag" \
     "monitor_workspaces_configurator" \
-    "$HOME/.config/hypr/scripts/monitor_workspaces_configurator.sh"
+    "$HOME/.config/hypr/scripts/monitor_workspaces_configurator.sh" \
+    "$HOME/.cache/run_once_flags/monitor_workspaces_flag" \
+    "$HOME/.cache/run_once_flags/execution_flag" \
+    "$HOME/.cache/run_once_flags/execution_once_flag"
 
 sleep 2
 
@@ -106,7 +124,7 @@ run_waybar_switcher
 sleep 4
 
 # 3. HYPR WELCOME
-# (Now places the flag only after the user closes the app!)
+# (Places the flag only after the user closes the app!)
 run_welcome
 
 exit 0
