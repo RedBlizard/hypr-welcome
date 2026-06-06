@@ -75,9 +75,9 @@ show_message() {
     echo -e "${color}${message}${NC}"
 }
 
-show_message "░█─░█ █──█ █▀▀█ █▀▀█ █── █▀▀█ █▀▀▄ █▀▀▄ 　 █▀▀▄ █▀▀█ ▀▀█▀▀ █▀▀ 　 █──█ █▀▀█ █▀▀▄ █▀▀█ ▀▀█▀▀ █▀▀" "$RED"
-show_message "░█▀▀█ █▄▄█ █──█ █▄▄▀ █── █▄▄█ █──█ █──█ 　 █──█ █──█ ──█── ▀▀█ 　 █──█ █──█ █──█ █▄▄█ ──█── █▀▀" "$RED"
-show_message "░█─░█ ▄▄▄█ █▀▀▀ ▀─▀▀ ▀▀▀ ▀──▀ ▀──▀ ▀▀▀─ 　 ▀▀▀─ ▀▀▀▀ ──▀── ▀▀▀ 　 ─▀▀▀ █▀▀▀ ▀▀▀─ ▀──▀ ──▀── ▀▀▀" "$RED"
+show_message "░█─░█ █──█ █▀▀█ █▀▀█ █── █▀▀█ █▀▀▄ █▀▀▄   █▀▀▄ █▀▀█ ▀▀█▀▀ █▀▀   █──█ █▀▀█ █▀▀▄ █▀▀█ ▀▀█▀▀ █▀▀" "$RED"
+show_message "░█▀▀█ █▄▄█ █──█ █▄▄▀ █── █▄▄█ █──█ █──█   █──█ █──█ ──█── ▀▀█   █──█ █──█ █──█ █▄▄█ ──█── █▀▀" "$RED"
+show_message "░█─░█ ▄▄▄█ █▀▀▀ ▀─▀▀ ▀▀▀ ▀──▀ ▀──▀ ▀▀▀─   ▀▀▀─ ▀▀▀▀ ──▀── ▀▀▀   ─▀▀▀ █▀▀▀ ▀▀▀─ ▀──▀ ──▀── ▀▀▀" "$RED"
 echo
 
 # Clone or update the repositories
@@ -103,7 +103,6 @@ updates_available=false
 for repo in "${REPOS[@]}"; do
     repo_name=$(basename "$repo" .git)
     repo_dir="$DOTFILES_DIR/$repo_name"
-
     if cd "$repo_dir" && git fetch origin main && [ "$(git rev-list --count HEAD..origin/main)" -gt 0 ]; then
         updates_available=true
         show_message "Updates are available for $repo_name repository." "$BLUE"
@@ -119,20 +118,24 @@ fi
 read -rp "Do you want to update your dotfiles? (Enter 'Yy' for yes or 'Nn' for no): (Yy/Nn): " update_choice
 
 if [[ "$update_choice" =~ ^[Yy]$ ]]; then
+
     # ============================================================
     # SAFE: Sync Hyprland-blizz (specific subdirectories only)
     # ============================================================
     show_message "Updating dotfiles from Hyprland-blizz..." "$BLUE"
-    
+
     rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.icons/" "$HOME/.icons/" \
         || { show_message "Failed to update .icons." "$RED"; exit 1; }
+
     rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.Kvantum-themes/" "$HOME/.Kvantum-themes/" \
         || { show_message "Failed to update .Kvantum-themes." "$RED"; exit 1; }
+
     rsync -a "$HOME/hyprland-dots/Hyprland-blizz/.local/" "$HOME/.local/" \
         || { show_message "Failed to update .local." "$RED"; exit 1; }
+
     rsync -a "$HOME/hyprland-dots/Hyprland-blizz/Pictures/" "$HOME/Pictures/" \
         || { show_message "Failed to update Pictures." "$RED"; exit 1; }
-    
+
     for config_dir in alacritty btop cava dunst hypr kitty Kvantum networkmanager-dmenu nwg-look pacseek pipewire qt6ct ranger sddm-config-editor systemd Thunar waybar wlogout wofi xsettingsd gtk-2.0 gtk-3.0 gtk-4.0 starship swaync; do
         if [ -d "$HOME/hyprland-dots/Hyprland-blizz/.config/$config_dir" ]; then
             rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.config/$config_dir/" "$HOME/.config/$config_dir/" \
@@ -154,33 +157,8 @@ if [[ "$update_choice" =~ ^[Yy]$ ]]; then
     rsync -a --delete "$HOME/hyprland-dots/hypr-waybar/.config/waybar/" "$HOME/.config/waybar/" \
         || { show_message "Failed to update .config/waybar." "$RED"; exit 1; }
 
-    # ============================================================
-    # Place session flags so configurators do NOT re-run next login
-    # Flags from welcome.sh:
-    #   - monitor_workspaces_configurator
-    #   - yad_switch-waybar-config
-    #   - hypr-welcome
-    # Flags from monitor_workspaces_configurator.sh:
-    #   - first-time execution
-    #   - one-time execution
-    # ============================================================
-    show_message "Placing session flags to prevent re-running configurators..." "$BLUE"
-
-    declare -a FLAGS=(
-        "$HOME/.cache/run_once_flags/monitor_workspaces_flag"
-        "$HOME/.cache/run_once_flags/waybar_flag"
-        "$HOME/.cache/run_once_flags/welcome_flag"
-        "$HOME/.cache/run_once_flags/execution_flag"
-        "$HOME/.cache/run_once_flags/execution_once_flag"
-    )
-
-    for flag in "${FLAGS[@]}"; do
-        mkdir -p "$(dirname "$flag")"
-        touch "$flag" && show_message "  ✔ Placed: $flag" "$GREEN" \
-            || show_message "  ✖ Failed to place: $flag" "$RED"
-    done
-
-    show_message "All flags placed. Configurators will be skipped on next session." "$GREEN"
+    # NOTE: Session flag placement has been intentionally removed per user request.
+    # No flags will be placed in ~/.cache/run_once_flags/ by this script.
 
 else
     show_message "No dotfiles update performed." "$BLUE"
@@ -196,10 +174,10 @@ fi
 cd "$HOME" || { echo 'Failed to change directory to home directory.'; exit 1; }
 
 # Cleanup
-rm -rf $HOME/README.md
-rm -rf $HOME/sddm-images
-rm -rf $HOME/LICENSE
-rm -rf $HOME/sddm.conf
+rm -rf "$HOME/README.md"
+rm -rf "$HOME/sddm-images"
+rm -rf "$HOME/LICENSE"
+rm -rf "$HOME/sddm.conf"
 
 # Change to the scripts directory
 cd "$HOME/.config/hypr-welcome/scripts" || { echo "Failed to change to the scripts directory." >&2; exit 1; }
@@ -208,14 +186,12 @@ cd "$HOME/.config/hypr-welcome/scripts" || { echo "Failed to change to the scrip
 check_symlinks() {
     local symlinks=("hypr-welcome" "hypr-eos-kill-yad-zombies" "hypr_check_updates")
     local all_exist=true
-    
     for symlink in "${symlinks[@]}"; do
         if [ ! -L "/usr/bin/$symlink" ]; then
             all_exist=false
             break
         fi
     done
-    
     if $all_exist; then
         echo "All required symlinks exist."
         return 0
@@ -228,35 +204,23 @@ check_symlinks() {
 # Check if the symlinks exist
 if ! check_symlinks; then
     echo "Creating missing symlinks..."
-    
+
     # Change to the scripts directory
     cd "$HOME/.config/hypr-welcome/scripts" || { echo "Failed to change to the scripts directory." >&2; exit 1; }
 
     # Path to your welcome script
     welcome_script="$HOME/.config/hypr-welcome/scripts/hypr-welcome"
-
-    # Path to the symlink in /usr/bin
     symlink="/usr/bin/hypr-welcome"
-
-    # Create new symlink
     sudo ln -sf "$welcome_script" "$symlink"
 
     # Path to your kill script
     kill_script="$HOME/.config/hypr-welcome/scripts/hypr-eos-kill-yad-zombies"
-
-    # Path to the symlink in /usr/bin
     symlink="/usr/bin/hypr-eos-kill-yad-zombies"
-
-    # Create new symlink
     sudo ln -sf "$kill_script" "$symlink"
 
     # Path to your update script
     update_script="$HOME/.config/hypr-welcome/scripts/hypr_check_updates.sh"
-
-    # Path to the symlink in /usr/bin
     symlink="/usr/bin/hypr_check_updates"
-
-    # Create new symlink
     sudo ln -sf "$update_script" "$symlink"
 fi
 
