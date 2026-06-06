@@ -154,7 +154,7 @@ if [[ "$update_choice" =~ ^[Yy]$ ]]; then
 
     declare -a FLAGS=(
         "$HOME/.cache/run_once_flags/monitor_workspaces_flag"
-        "$HOME/.cache/run_once_flag/execution_flag"
+        "$HOME/.cache/run_once_flags/execution_flag"
         "$HOME/.cache/run_once_flags/execution_once_flag"
     )
 
