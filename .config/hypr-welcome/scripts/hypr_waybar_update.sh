@@ -73,12 +73,10 @@ show_message() {
     echo -e "${color}${message}${NC}"
 }
 
-
-show_message "░█──█ █──█ █▀▀█ █▀▀█ ── █───█ █▀▀█ █──█ █▀▀▄ █▀▀█ █▀▀█ ── █──█ █▀▀█ █▀▀▄ █▀▀█ ▀▀█▀▀ █▀▀" "$RED" 
-show_message "░█▀▀█ █▄▄█ █──█ █▄▄▀ ▀▀ █▄█▄█ █▄▄█ █▄▄█ █▀▀▄ █▄▄█ █▄▄▀ ▀▀ █──█ █──█ █──█ █▄▄█ ──█── █▀▀" "$RED" 
-show_message "░▀──▀ ▄▄▄█ █▀▀▀ ▀─▀▀ ── ─▀─▀─ ▀──▀ ▄▄▄█ ▀▀▀─ ▀──▀ ▀─▀▀ ── ─▀▀▀ █▀▀▀ ▀▀▀─ ▀──▀ ──▀── ▀▀▀" "$RED"
+show_message "░█──█ █──█ █▀▀█ █▀▀█ ── █───█ █▀▀█ █──█ █▀▀▄ █▀▀█ █▀▀█ ── █──█ █▀▀█ █▀▀▄ █▀▀█ ▀▀█▀▀ █▀▀" "$RED"
+show_message "░█▀▀█ █▄▄█ █──█ █▄▄▀ ▀▀ █▄█▄█ █▄▄█ █▄▄█ █▀▀▄ █▄▄█ █▄▄▀ ▀▀ █──█ █──█ █──█ █▄▄█ ──█── █▀▀" "$RED"
+show_message "░▀──▀ ▄▄▄█ █▀▀▀ ▀─▀▀ ── ─▀─▀─ ▀──▀ ▄▄▄█ ▀▀▀─ ▀──▀ ▀─▀▀ ── ─▀▀▀ █▀▀▀ ▀▀▀─ ▀──▀ ── ─── ▀▀▀" "$RED"
 echo
-
 
 # Clone or update the repositories
 for repo in "${REPOS[@]}"; do
@@ -103,7 +101,6 @@ updates_available=false
 for repo in "${REPOS[@]}"; do
     repo_name=$(basename "$repo" .git)
     repo_dir="$DOTFILES_DIR/$repo_name"
-
     if cd "$repo_dir" && git fetch origin main && [ "$(git rev-list --count HEAD..origin/main)" -gt 0 ]; then
         updates_available=true
         show_message "Updates are available for $repo_name repository." "$BLUE"
@@ -119,11 +116,10 @@ fi
 read -rp "Do you want to update your dotfiles? (Enter 'Yy' for yes or 'Nn' for no): (Yy/Nn): " update_choice
 
 if [[ "$update_choice" =~ ^[Yy]$ ]]; then
-    # === PRESERVE ACTIVE WAYBAR CONFIG AND FLAG BEFORE UPDATE ===
+
+    # === PRESERVE ACTIVE WAYBAR CONFIG BEFORE UPDATE ===
     WAYBAR_CONFIG_LINK="$HOME/.config/waybar/config.jsonc"
-    WAYBAR_FLAG="$HOME/.cache/run_once_flags/waybar_flag"
     active_config=""
-    flag_backup=""
 
     # Save the active config path (symlink preferred)
     if [ -L "$WAYBAR_CONFIG_LINK" ]; then
@@ -133,14 +129,7 @@ if [[ "$update_choice" =~ ^[Yy]$ ]]; then
         show_message "Waybar config is not a symlink, config choice will not be restored." "$BLUE"
     fi
 
-    # Backup the waybar_flag so welcome.sh does not re-trigger
-    if [ -f "$WAYBAR_FLAG" ]; then
-        flag_backup=$(mktemp)
-        cp "$WAYBAR_FLAG" "$flag_backup"
-        show_message "waybar_flag temporarily backed up." "$GREEN"
-    fi
     # =========================================================
-
     # Kill Waybar before updating to avoid file-in-use conflicts
     show_message "Stopping Waybar before update..." "$BLUE"
     pkill -x waybar && sleep 1
@@ -150,27 +139,19 @@ if [[ "$update_choice" =~ ^[Yy]$ ]]; then
     rsync -a --delete "$HOME/hyprland-dots/hypr-waybar/.config/waybar/" "$HOME/.config/waybar/" \
         || { show_message "Failed to update .config/waybar." "$RED"; waybar & disown; exit 1; }
 
-    # === RESTORE ACTIVE WAYBAR CONFIG AND FLAG AFTER UPDATE ===
-    # Restore the chosen config symlink
+    # === RESTORE ACTIVE WAYBAR CONFIG AFTER UPDATE ===
     if [ -n "$active_config" ]; then
         ln -sf "$active_config" "$WAYBAR_CONFIG_LINK" \
             && show_message "Waybar config restored to: $active_config" "$GREEN" \
             || show_message "Failed to restore waybar config symlink!" "$RED"
     fi
 
-    # Restore the waybar_flag so welcome.sh does not reset
-    if [ -n "$flag_backup" ]; then
-        mkdir -p "$(dirname "$WAYBAR_FLAG")"
-        cp "$flag_backup" "$WAYBAR_FLAG"
-        rm -f "$flag_backup"
-        show_message "waybar_flag restored." "$GREEN"
-    fi
     # =========================================================
-
     # Restart Waybar with the restored config
     show_message "Restarting Waybar..." "$BLUE"
     waybar & disown
     show_message "Waybar restarted successfully." "$GREEN"
+
 else
     show_message "No waybar dotfiles update performed." "$BLUE"
     exit 0
@@ -185,10 +166,10 @@ fi
 cd "$HOME" || { echo 'Failed to change directory to home directory.'; exit 1; }
 
 # Cleanup
-rm -rf $HOME/README.md
-rm -rf $HOME/sddm-images
-rm -rf $HOME/LICENSE
-rm -rf $HOME/sddm.conf
+rm -rf "$HOME/README.md"
+rm -rf "$HOME/sddm-images"
+rm -rf "$HOME/LICENSE"
+rm -rf "$HOME/sddm.conf"
 
 # Change to the scripts directory
 cd "$HOME/.config/hypr-welcome/scripts" || { echo "Failed to change to the scripts directory." >&2; exit 1; }
@@ -197,14 +178,12 @@ cd "$HOME/.config/hypr-welcome/scripts" || { echo "Failed to change to the scrip
 check_symlinks() {
     local symlinks=("hypr-welcome" "hypr-eos-kill-yad-zombies" "hypr_check_updates")
     local all_exist=true
-    
     for symlink in "${symlinks[@]}"; do
         if [ ! -L "/usr/bin/$symlink" ]; then
             all_exist=false
             break
         fi
     done
-    
     if $all_exist; then
         echo "All required symlinks exist."
         return 0
@@ -217,35 +196,23 @@ check_symlinks() {
 # Check if the symlinks exist
 if ! check_symlinks; then
     echo "Creating missing symlinks..."
-    
+
     # Change to the scripts directory
     cd "$HOME/.config/hypr-welcome/scripts" || { echo "Failed to change to the scripts directory." >&2; exit 1; }
 
     # Path to your welcome script
     welcome_script="$HOME/.config/hypr-welcome/scripts/hypr-welcome"
-
-    # Path to the symlink in /usr/bin
     symlink="/usr/bin/hypr-welcome"
-
-    # Create new symlink
     sudo ln -sf "$welcome_script" "$symlink"
 
     # Path to your kill script
     kill_script="$HOME/.config/hypr-welcome/scripts/hypr-eos-kill-yad-zombies"
-
-    # Path to the symlink in /usr/bin
     symlink="/usr/bin/hypr-eos-kill-yad-zombies"
-
-    # Create new symlink
     sudo ln -sf "$kill_script" "$symlink"
 
     # Path to your update script
     update_script="$HOME/.config/hypr-welcome/scripts/hypr_check_updates.sh"
-
-    # Path to the symlink in /usr/bin
     symlink="/usr/bin/hypr_check_updates"
-
-    # Create new symlink
     sudo ln -sf "$update_script" "$symlink"
 fi
 
