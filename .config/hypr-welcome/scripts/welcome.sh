@@ -31,7 +31,7 @@ run_flagged() {
 # HYPR WELCOME
 # ----------------------------
 run_welcome() {
-    local lock_file="$HOME/.cache/run_once_flags/welcome.flag" # <-- NIEUW PAD
+    local lock_file="$HOME/.cache/run_once_flags/welcome_flag" # <-- NIEUW PAD
     local job_cmd="$HOME/.config/hypr-welcome/scripts/hypr-welcome"
     
     mkdir -p "$(dirname "$lock_file")"
@@ -56,7 +56,7 @@ run_welcome() {
 # WAYBAR SWITCHER
 # ----------------------------
 run_waybar_switcher() {
-    local lock_file="$HOME/.cache/run_once_flags/waybar.flag" # <-- NIEUW PAD
+    local lock_file="$HOME/.cache/run_once_flags/waybar_flag" # <-- NIEUW PAD
     mkdir -p "$(dirname "$lock_file")"
     
     if [ -e "$lock_file" ]; then
