@@ -1,7 +1,6 @@
 #!/bin/bash
 
 logo_path="$HOME/.config/hypr-welcome/imgs/hypr-welcome.png"
-
 WAYBAR_CONFIGS=("Desktop" "Laptop" "Minimal")
 
 selected_config=$(printf "%s\n" "${WAYBAR_CONFIGS[@]}" | yad \
@@ -59,15 +58,11 @@ esac
 # ----------------------------
 DIR="$HOME/Pictures/wallpapers-redblizard/"
 PICS=("$DIR"/*)
-
 RANDOMPICS=$(basename "${PICS[$RANDOM % ${#PICS[@]}]}")
 
 pkill swaybg 2>/dev/null
-
 pgrep -x swww-daemon >/dev/null || (swww-daemon & disown)
-
 swww img "${DIR}/${RANDOMPICS}" --transition-step 20 --transition-fps=20
-
 cp "${DIR}/${RANDOMPICS}" "$HOME/.cache/awww/current_wallpaper.png"
 
 # ----------------------------
@@ -86,6 +81,6 @@ echo "Waybar configured: '$selected_config'."
 # Dit script zelf checkt de flag NOOIT — de knop in hypr-welcome
 # opent dit script altijd gewoon, ook als de flag al bestaat.
 # ----------------------------
-WAYBAR_FLAG="$HOME/.config/waybar/scripts/waybar_flag"
+WAYBAR_FLAG="$HOME/.cache/run_once_flags/waybar_configured.flag"
 mkdir -p "$(dirname "$WAYBAR_FLAG")"
 touch "$WAYBAR_FLAG"
