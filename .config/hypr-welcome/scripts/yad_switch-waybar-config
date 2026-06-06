@@ -81,6 +81,6 @@ echo "Waybar configured: '$selected_config'."
 # Dit script zelf checkt de flag NOOIT — de knop in hypr-welcome
 # opent dit script altijd gewoon, ook als de flag al bestaat.
 # ----------------------------
-WAYBAR_FLAG="$HOME/.cache/run_once_flags/waybar_configured.flag"
+WAYBAR_FLAG="$HOME/.cache/run_once_flags/waybar.flag"
 mkdir -p "$(dirname "$WAYBAR_FLAG")"
 touch "$WAYBAR_FLAG"
