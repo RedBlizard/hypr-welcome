@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# ----------------------------
+# GENERIC RUN-ONCE FUNCTION
+# ----------------------------
 run_flagged() {
     local lock_file="$1"
     local job_name="$2"
@@ -14,11 +17,12 @@ run_flagged() {
     
     echo "Starting $job_name..."
     if [ -x "$job_cmd" ]; then
+        # Wait for the script to fully complete (including any GUI dialogs)
         if "$job_cmd"; then
             touch "$lock_file"
-            echo "$job_name completed successfully."
+            echo "$job_name completed successfully, flag placed."
         else
-            echo "⚠ Error: $job_cmd failed!"
+            echo "⚠ Error: $job_cmd failed! No flag placed."
             return 1
         fi
     else
@@ -31,7 +35,7 @@ run_flagged() {
 # HYPR WELCOME
 # ----------------------------
 run_welcome() {
-    local lock_file="$HOME/.cache/run_once_flags/welcome_flag" # <-- NIEUW PAD
+    local lock_file="$HOME/.cache/run_once_flags/welcome_flag"
     local job_cmd="$HOME/.config/hypr-welcome/scripts/hypr-welcome"
     
     mkdir -p "$(dirname "$lock_file")"
@@ -40,23 +44,40 @@ run_welcome() {
         return 0
     fi
     
-    "$job_cmd"
+    echo "Starting hypr-welcome..."
+    # Start the app in the background so we can monitor its process
+    "$job_cmd" &
+    local job_pid=$!
+    
+    # 1. Wait until the window actually appears (max 10 seconds)
     for i in {1..100}; do
         if hyprctl clients | grep -q "hypr-welcome"; then
-            touch "$lock_file"
-            echo "hypr-welcome ready"
-            return 0
+            echo "hypr-welcome window detected"
+            break
         fi
         sleep 0.1
     done
-    echo "hypr-welcome not detected"
+    
+    # 2. Wait until the user is done:
+    # Keep waiting until the process ends OR the window disappears from hyprctl clients.
+    # This ensures the flag is only placed AFTER the app is actually closed.
+    while kill -0 "$job_pid" 2>/dev/null || hyprctl clients | grep -q "hypr-welcome"; do
+        sleep 1
+    done
+    
+    touch "$lock_file"
+    echo "hypr-welcome finished and closed, flag placed."
 }
 
 # ----------------------------
 # WAYBAR SWITCHER
+# Run-once flag: welcome.sh checks this flag at every boot.
+# If the flag exists -> waybar already configured, skip this step.
+# If the flag does not exist -> wait for user to pick via hypr-welcome button.
+# The flag is set by yad_switch-waybar-config after the first successful choice.
 # ----------------------------
 run_waybar_switcher() {
-    local lock_file="$HOME/.cache/run_once_flags/waybar_flag" # <-- NIEUW PAD
+    local lock_file="$HOME/.cache/run_once_flags/waybar_flag"
     mkdir -p "$(dirname "$lock_file")"
     
     if [ -e "$lock_file" ]; then
@@ -67,9 +88,12 @@ run_waybar_switcher() {
     echo "Waybar not yet configured — waiting for user to pick via hypr-welcome."
 }
 
-# ----------------------------
+# ==========================================
+# EXECUTION ON STARTUP
+# ==========================================
+
 # 1. Monitor workspaces configurator
-# ----------------------------
+# (Now waits properly until the script and any yad dialogs are fully completed)
 run_flagged \
     "$HOME/.cache/run_once_flags/monitor_workspaces_flag" \
     "monitor_workspaces_configurator" \
@@ -77,15 +101,12 @@ run_flagged \
 
 sleep 2
 
-# ----------------------------
-# 2. WAYBAR SWITCHER
-# ----------------------------
+# 2. WAYBAR SWITCHER CHECK
 run_waybar_switcher
 sleep 4
 
-# ----------------------------
 # 3. HYPR WELCOME
-# ----------------------------
+# (Now places the flag only after the user closes the app!)
 run_welcome
 
 exit 0
