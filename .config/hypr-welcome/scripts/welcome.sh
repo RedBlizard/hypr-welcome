@@ -108,23 +108,27 @@ run_waybar_switcher() {
 # EXECUTION ON STARTUP
 # ==========================================
 
-# 1. Monitor workspaces configurator
-# Now passes all three required flags to the run_flagged function
+# 1. Set root kvantum theme
 run_flagged \
-    "monitor_workspaces_configurator" \
-    "$HOME/.config/hypr/scripts/monitor_workspaces_configurator.sh" \
-    "$HOME/.cache/run_once_flags/monitor_workspaces_flag" \
-    "$HOME/.cache/run_once_flags/execution_flag" \
-    "$HOME/.cache/run_once_flags/execution_once_flag"
+    "set_root_kvantum_theme" \
+    "$HOME/.config/hypr/scripts/set_root_kvantum_theme.sh" \
+    "$HOME/.cache/run_once_flags/execution_flag"
 
 sleep 2
 
-# 2. WAYBAR SWITCHER CHECK
+# 2. Monitor workspaces configurator
+run_flagged \
+    "monitor_workspaces_configurator" \
+    "$HOME/.config/hypr/scripts/monitor_workspaces_configurator.sh" \
+    "$HOME/.cache/run_once_flags/monitor_workspaces_flag"
+
+sleep 2
+
+# 3. WAYBAR SWITCHER CHECK
 run_waybar_switcher
 sleep 4
 
-# 3. HYPR WELCOME
-# (Places the flag only after the user closes the app!)
+# 4. HYPR WELCOME
 run_welcome
 
 exit 0
