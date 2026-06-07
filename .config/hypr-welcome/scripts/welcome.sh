@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # ----------------------------
 # GENERIC RUN-ONCE FUNCTION (MULTIPLE FLAGS SUPPORT)
 # ----------------------------
@@ -8,12 +7,12 @@ run_flagged() {
     local job_cmd="$2"
     shift 2
     local lock_files=("$@")
-    
+
     # Create directories for all flags
     for lock_file in "${lock_files[@]}"; do
         mkdir -p "$(dirname "$lock_file")"
     done
-    
+
     # Check if ALL flags exist (if so, the job has already run)
     local all_exist=true
     for lock_file in "${lock_files[@]}"; do
@@ -22,17 +21,16 @@ run_flagged() {
             break
         fi
     done
-    
+
     if [ "$all_exist" = true ]; then
         echo "$job_name has already run. Skipping."
         return 0
     fi
-    
+
     echo "Starting $job_name..."
+
     if [ -x "$job_cmd" ]; then
-        # Wait for the script to fully complete (including any GUI dialogs)
         if "$job_cmd"; then
-            # Touch all flags upon successful completion
             for lock_file in "${lock_files[@]}"; do
                 touch "$lock_file"
             done
@@ -53,19 +51,19 @@ run_flagged() {
 run_welcome() {
     local lock_file="$HOME/.cache/run_once_flags/welcome_flag"
     local job_cmd="$HOME/.config/hypr-welcome/scripts/hypr-welcome"
-    
+
     mkdir -p "$(dirname "$lock_file")"
+
     if [ -e "$lock_file" ]; then
         echo "hypr-welcome already done."
         return 0
     fi
-    
+
     echo "Starting hypr-welcome..."
-    # Start the app in the background so we can monitor its process
     "$job_cmd" &
     local job_pid=$!
-    
-    # 1. Wait until the window actually appears (max 10 seconds)
+
+    # Wait until the window actually appears (max 10 seconds)
     for i in {1..100}; do
         if hyprctl clients | grep -q "hypr-welcome"; then
             echo "hypr-welcome window detected"
@@ -73,34 +71,28 @@ run_welcome() {
         fi
         sleep 0.1
     done
-    
-    # 2. Wait until the user is done:
-    # Keep waiting until the process ends OR the window disappears from hyprctl clients.
-    # This ensures the flag is only placed AFTER the app is actually closed.
+
+    # Wait until the process ends OR the window disappears
     while kill -0 "$job_pid" 2>/dev/null || hyprctl clients | grep -q "hypr-welcome"; do
         sleep 1
     done
-    
+
     touch "$lock_file"
     echo "hypr-welcome finished and closed, flag placed."
 }
 
 # ----------------------------
 # WAYBAR SWITCHER
-# Run-once flag: welcome.sh checks this flag at every boot.
-# If the flag exists -> waybar already configured, skip this step.
-# If the flag does not exist -> wait for user to pick via hypr-welcome button.
-# The flag is set by yad_switch-waybar-config after the first successful choice.
 # ----------------------------
 run_waybar_switcher() {
     local lock_file="$HOME/.cache/run_once_flags/waybar_flag"
     mkdir -p "$(dirname "$lock_file")"
-    
+
     if [ -e "$lock_file" ]; then
         echo "Waybar already configured. Skipping."
         return 0
     fi
-    
+
     echo "Waybar not yet configured — waiting for user to pick via hypr-welcome."
 }
 
@@ -108,15 +100,7 @@ run_waybar_switcher() {
 # EXECUTION ON STARTUP
 # ==========================================
 
-# 1. Set root kvantum theme
-run_flagged \
-    "set_root_kvantum_theme" \
-    "$HOME/.config/hypr/scripts/set_root_kvantum_theme.sh" \
-    "$HOME/.cache/run_once_flags/execution_flag"
-
-sleep 2
-
-# 2. Monitor workspaces configurator
+# 1. Monitor workspaces configurator
 run_flagged \
     "monitor_workspaces_configurator" \
     "$HOME/.config/hypr/scripts/monitor_workspaces_configurator.sh" \
@@ -124,11 +108,12 @@ run_flagged \
 
 sleep 2
 
-# 3. WAYBAR SWITCHER CHECK
+# 2. WAYBAR SWITCHER CHECK
 run_waybar_switcher
+
 sleep 4
 
-# 4. HYPR WELCOME
+# 3. HYPR WELCOME
 run_welcome
 
 exit 0
