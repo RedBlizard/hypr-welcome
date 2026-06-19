@@ -135,7 +135,7 @@ if [[ "$update_choice" =~ ^[Yy]$ ]]; then
         || { show_message "Failed to update Pictures from Hyprland-blizz." "$RED"; exit 1; }
 
     # Sync .config subdirectories (ONLY the ones managed by this repo)
-    for config_dir in alacritty btop cava dunst hypr kitty Kvantum networkmanager-dmenu nwg-look pacseek pipewire qt6ct ranger sddm-config-editor systemd Thunar waybar wlogout wofi xsettingsd gtk-2.0 gtk-3.0 gtk-4.0 starship swaync; do
+    for config_dir in alacritty btop cava dunst hypr kitty Kvantum networkmanager-dmenu nwg-look pacseek pipewire qt6ct ranger sddm-config-editor systemd Thunar waybar waypaper wlogout wofi xsettingsd gtk-2.0 gtk-3.0 gtk-4.0 starship swaync; do
         if [ -d "$HOME/hyprland-dots/Hyprland-blizz/.config/$config_dir" ]; then
             rsync -a --delete "$HOME/hyprland-dots/Hyprland-blizz/.config/$config_dir/" "$HOME/.config/$config_dir/" \
                 || { show_message "Failed to update $config_dir from Hyprland-blizz." "$RED"; exit 1; }
