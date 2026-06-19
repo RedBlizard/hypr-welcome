@@ -184,7 +184,7 @@ cd "$HOME/.config/hypr-welcome/scripts" || { echo "Failed to change to the scrip
 
 # Function to check if all required symlinks exist
 check_symlinks() {
-    local symlinks=("hypr-welcome" "hypr-eos-kill-yad-zombies" "hypr_check_updates")
+    local symlinks=("hypr-welcome" "hypr-eos-kill-yad-zombies" "hypr_check_updates" "selectWallpaper -s")
     local all_exist=true
     for symlink in "${symlinks[@]}"; do
         if [ ! -L "/usr/bin/$symlink" ]; then
