@@ -182,51 +182,60 @@ rm -rf "$HOME/sddm.conf"
 # Change to the scripts directory
 cd "$HOME/.config/hypr-welcome/scripts" || { echo "Failed to change to the scripts directory." >&2; exit 1; }
 
-# Function to check if all required symlinks exist
+# Function to check if all required symlinks exist and point to the correct targets
 check_symlinks() {
-    local symlinks=("hypr-welcome" "hypr-eos-kill-yad-zombies" "hypr_check_updates" "select-wallpaper")
     local all_exist=true
-    for symlink in "${symlinks[@]}"; do
-        if [ ! -L "/usr/bin/$symlink" ]; then
-            all_exist=false
-            break
-        fi
-    done
+
+    # Check hypr-welcome tools
+    if [ ! -L "/usr/bin/hypr-welcome" ] || [ "$(readlink -f /usr/bin/hypr-welcome)" != "$HOME/.config/hypr-welcome/scripts/hypr-welcome" ]; then
+        all_exist=false
+    fi
+
+    if [ ! -L "/usr/bin/hypr-eos-kill-yad-zombies" ] || [ "$(readlink -f /usr/bin/hypr-eos-kill-yad-zombies)" != "$HOME/.config/hypr-welcome/scripts/hypr-eos-kill-yad-zombies" ]; then
+        all_exist=false
+    fi
+
+    if [ ! -L "/usr/bin/hypr_check_updates" ] || [ "$(readlink -f /usr/bin/hypr_check_updates)" != "$HOME/.config/hypr-welcome/scripts/hypr_check_updates.sh" ]; then
+        all_exist=false
+    fi
+
+    # Check global select-wallpaper (MUST point to .config/hypr/scripts/)
+    if [ ! -L "/usr/bin/select-wallpaper" ] || [ "$(readlink -f /usr/bin/select-wallpaper)" != "$HOME/.config/hypr/scripts/select-wallpaper" ]; then
+        all_exist=false
+    fi
+
     if $all_exist; then
-        echo "All required symlinks exist."
+        echo "All required symlinks exist and are correct."
         return 0
     else
-        echo "Some symlinks are missing."
+        echo "Some symlinks are missing or incorrect."
         return 1
     fi
 }
 
 # Check if the symlinks exist
 if ! check_symlinks; then
-    echo "Creating missing symlinks..."
+    echo "Creating/Fixing missing symlinks..."
 
-    # Change to the scripts directory
-    cd "$HOME/.config/hypr-welcome/scripts" || { echo "Failed to change to the scripts directory." >&2; exit 1; }
+    # --- 1. Link Hypr-Welcome internal tools ---
+    cd "$HOME/.config/hypr-welcome/scripts" || { echo "Failed to change to hypr-welcome scripts directory." >&2; exit 1; }
 
-    # Path to your welcome script
-    welcome_script="$HOME/.config/hypr-welcome/scripts/hypr-welcome"
-    symlink="/usr/bin/hypr-welcome"
-    sudo ln -sf "$welcome_script" "$symlink"
+    sudo ln -sf "$HOME/.config/hypr-welcome/scripts/hypr-welcome" "/usr/bin/hypr-welcome"
+    sudo ln -sf "$HOME/.config/hypr-welcome/scripts/hypr-eos-kill-yad-zombies" "/usr/bin/hypr-eos-kill-yad-zombies"
+    sudo ln -sf "$HOME/.config/hypr-welcome/scripts/hypr_check_updates.sh" "/usr/bin/hypr_check_updates"
 
-    # Path to your kill script
-    kill_script="$HOME/.config/hypr-welcome/scripts/hypr-eos-kill-yad-zombies"
-    symlink="/usr/bin/hypr-eos-kill-yad-zombies"
-    sudo ln -sf "$kill_script" "$symlink"
-
-    # Path to your wallpaper_selector_script script
-    wallpaper_selector_script="$HOME/.config/hypr-welcome/scripts/select-wallpaper"
-    symlink="/usr/bin/select-wallpaper"
-    sudo ln -sf "$wallpaper_selector_script" "$symlink"
-
-    # Path to your update script
-    update_script="$HOME/.config/hypr-welcome/scripts/hypr_check_updates.sh"
-    symlink="/usr/bin/hypr_check_updates"
-    sudo ln -sf "$update_script" "$symlink"
+    # --- 2. Link Global Interactive Wallpaper Selector ---
+    # This MUST point to the script in .config/hypr/scripts/, NOT the welcome folder
+    GLOBAL_WP_SCRIPT="$HOME/.config/hypr/scripts/select-wallpaper"
+    
+    # Ensure the source script exists before linking
+    if [ -f "$GLOBAL_WP_SCRIPT" ]; then
+        sudo ln -sf "$GLOBAL_WP_SCRIPT" "/usr/bin/select-wallpaper"
+        chmod +x "$GLOBAL_WP_SCRIPT"
+        echo "Linked global select-wallpaper to: $GLOBAL_WP_SCRIPT"
+    else
+        echo "ERROR: Global wallpaper script not found at $GLOBAL_WP_SCRIPT"
+    fi
 fi
 
 # Notify user about the end of the script
