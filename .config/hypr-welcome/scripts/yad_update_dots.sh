@@ -218,6 +218,11 @@ if ! check_symlinks; then
     symlink="/usr/bin/hypr-eos-kill-yad-zombies"
     sudo ln -sf "$kill_script" "$symlink"
 
+    # Path to your wallpaper_selector_script script
+    wallpaper_selector_script="$HOME/.config/hypr-welcome/scripts/selectWallpaper -s"
+    symlink="/usr/bin/selectWallpaper -s"
+    sudo ln -sf "$wallpaper_selector_script" "$symlink"
+
     # Path to your update script
     update_script="$HOME/.config/hypr-welcome/scripts/hypr_check_updates.sh"
     symlink="/usr/bin/hypr_check_updates"
