@@ -169,7 +169,7 @@ cd "$HOME/.config/hypr-welcome/scripts" || { echo "Failed to change to the scrip
 
 # Function to check if all required symlinks exist
 check_symlinks() {
-    local symlinks=("hypr-welcome" "hypr-eos-kill-yad-zombies" "hypr_check_updates" "select-wallpaper -s")
+    local symlinks=("hypr-welcome" "hypr-eos-kill-yad-zombies" "hypr_check_updates" "select-wallpaper")
     local all_exist=true
     for symlink in "${symlinks[@]}"; do
         if [ ! -L "/usr/bin/$symlink" ]; then
@@ -204,8 +204,8 @@ if ! check_symlinks; then
     sudo ln -sf "$kill_script" "$symlink"
 
    # Path to your wallpaper_selector_script script
-    wallpaper_selector_script="$HOME/.config/hypr-welcome/scripts/select-wallpaper -s"
-    symlink="/usr/bin/select-wallpaper -s"
+    wallpaper_selector_script="$HOME/.config/hypr-welcome/scripts/select-wallpaper"
+    symlink="/usr/bin/select-wallpaper"
     sudo ln -sf "$wallpaper_selector_script" "$symlink"
 
     # Path to your update script
