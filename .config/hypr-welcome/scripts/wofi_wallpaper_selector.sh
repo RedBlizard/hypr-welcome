@@ -36,7 +36,13 @@ set_wallpaper() {
 }
 
 select_wp() {
+    # TELEPORT TRICK: Move wofi to workspace 8 in the background.
+    # The 0.2s sleep ensures wofi has time to map its window before hyprctl moves it.
+    # We match the exact title to avoid moving other wofi instances (like the app launcher).
+    (sleep 0.2 && hyprctl dispatch movetoworkspacesilent 8, title:Select Wallpaper) &
+
     # Wofi requires the specific 'img:<path>:text:<name>' syntax for dmenu icons
+    # We pass a single space for text so it only renders the thumbnails (no filenames)
     CHOICE=$(find "${DIR}" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.gif" \) | sort | while IFS= read -r f; do
         printf 'img:%s:text: \n' "$f"
     done | wofi --show dmenu \
@@ -47,6 +53,7 @@ select_wp() {
 
     [ -z "$CHOICE" ] && exit 0
 
+    # Extract the exact file path from the returned 'img:/path:text: ' string
     FULLPATH=$(echo "$CHOICE" | sed 's/^img:\(.*\):text:.*$/\1/')
 
     if [ -f "$FULLPATH" ]; then
@@ -61,12 +68,10 @@ pkill -f yad
 sleep 0.2 # Give it a fraction of a second to cleanly close
 
 # Step 2: Launch the selector in the background
-# The '&' is crucial here, otherwise the script pauses and $! won't capture the PID
 select_wp &
 SELECTOR_PID=$!
 
 # Step 3: Wait for wofi (the selector function) to close
-# 'wait' is the native, clean bash way to pause until a background PID finishes
 wait $SELECTOR_PID
 
 # Step 4: Restart hypr-welcome (it will now read the newly updated cache!)
