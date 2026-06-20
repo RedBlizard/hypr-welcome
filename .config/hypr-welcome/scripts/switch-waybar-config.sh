@@ -9,7 +9,7 @@ selected_config=$(printf "%s\n" "${WAYBAR_CONFIGS[@]}" | yad \
     --no-headers \
     --title="Pick your waybar" \
     --image="$logo_path" \
-    --button=" Close")
+    --button="    Close me if you dare ...")
 
 # yad --list returns values with a trailing pipe (e.g. "Desktop|") — strip it
 selected_config="${selected_config%%|*}"
