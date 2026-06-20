@@ -20,9 +20,6 @@ launch_alacritty_terminal() {
 # Call the function to launch Alacritty terminal
 launch_alacritty_terminal
 
-# Call the function to launch Alacritty terminal
-launch_alacritty_terminal
-
 # Set the log file path
 log_file="$HOME/hypr-welcome-update_log.txt"
 
