@@ -3,7 +3,7 @@
 # 1. Kill existing YAD instances (like the current hypr-welcome)
 pkill -f yad
 
-# 2. Define the removal script with some nice colors and verbose output
+# 2. Define the removal script
 symlink_removal_script='
 clear
 echo -e "\033[1;34m=== SYMLINK REMOVAL SCRIPT (SAFE MODE) ===\033[0m"
@@ -23,11 +23,8 @@ echo "Press any key to close this terminal..."
 read -n 1 -s
 '
 
-# 3. Launch Alacritty to run the removal script
-alacritty -e bash -c "$symlink_removal_script" &
+# 3. Wacht tot Alacritty terminal gesloten wordt (geen & = blocking)
+alacritty -e bash -c "$symlink_removal_script"
 
-# 4. Wait a moment to give the terminal time to open and prompt for sudo
-sleep 12
-
-# 5. Relaunch the welcome app
+# 4. Direct herlanceren zodra terminal dicht gaat
 bash "$HOME/.config/hypr-welcome/scripts/hypr-welcome"
