@@ -1,0 +1,35 @@
+#!/bin/bash
+
+Printf() {
+    [ "$silent" = "no" ] && /usr/bin/printf "$@"
+}
+
+Main() {
+    local silent=no
+
+    case "$1" in
+        --silent) silent=yes ;;
+    esac
+
+    sleep 0.1
+
+    # Get all yad processes for this user
+    while IFS= read -r line; do
+        pid=$(echo "$line" | awk '{print $1}')
+        cmd=$(echo "$line" | cut -d' ' -f2-)
+
+        # Safety filter: only kill clearly orphan/simple yad calls
+        if [[ "$cmd" == "/usr/bin/yad" || "$cmd" == "yad" ]]; then
+            Printf "Killing yad zombie: %s\n" "$line"
+            kill "$pid" 2>/dev/null
+        fi
+
+    done < <(pgrep -u "$LOGNAME" -a yad)
+
+    # Optional: cleanup feedback
+    if [ "$silent" = "no" ]; then
+        Printf "YAD cleanup completed at %s\n" "$(date '+%T')"
+    fi
+}
+
+Main "$@"
