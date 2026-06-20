@@ -21,6 +21,7 @@ hypr_blizz_update_script="$HOME/.config/hypr-welcome/scripts/hypr_blizz_update.s
 hypr_welcome_update_script="$HOME/.config/hypr-welcome/scripts/hypr_welcome_update.sh"
 hypr_waybar_update_script="$HOME/.config/hypr-welcome/scripts/hypr_waybar_update.sh"
 backup_and_symlinks_script="$HOME/.config/hypr-welcome/scripts/backup_and_symlinks.sh"
+symlink_removal_script="$HOME/.config/hypr-welcome/scripts/remove_symlinks.sh"
 hypr_blizz_repo="$HOME/hyprland-dots/Hyprland-blizz"
 hypr_welcome_repo="$HOME/hyprland-dots/hypr-welcome"
 hypr_waybar_repo="$HOME/hyprland-dots/hypr-waybar"
@@ -110,7 +111,7 @@ create_yad_dialog() {
         --tab="General info" \
             --form \
             --columns=3 \
-            --field="<b><span font_desc='CustomFont 10'></span>   General info</b>:FBTN" "bash -c 'yad --notebook --tab=\"General info\" --form \
+            --field="<b><span font_desc='CustomFont 10'></span>   General info</b>:FBTN" "bash -c 'yad --notebook --tab=\"General info\" --form \
                 --columns=3 \
                 --image=\"$logo_path\" \
                 --image-on-top-center \
@@ -132,7 +133,7 @@ create_yad_dialog() {
         --tab="Assistant" \
             --form \
             --columns=3 \
-            --field="<b><span font_desc='CustomFont 10'>󱌢</span>   Assistant</b>:FBTN" "bash -c 'yad --notebook --tab=\"Assistant\" --form \
+            --field="<b><span font_desc='CustomFont 9'></span>   Assistant</b>:FBTN" "bash -c 'yad --notebook --tab=\"Assistant\" --form \
                 --columns=3 \
                 --image=\"$logo_path\" \
                 --image-on-top-center \
@@ -165,11 +166,11 @@ create_yad_dialog() {
             --field="Repair yay:FBTN" "bash $refresh_yay_script" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
-            --field="<span font_desc='CustomFont 10'> </span> Trouble Shoot Logs:FBTN" "bash $eos_log_tool_script" \
+            --field="<span foreground='#FD807E'> </span> Nuke the symlinks:FBTN" "bash $symlink_removal_script" \
         --tab="System updates" \
             --form \
             --columns=3 \
-            --field="<b><span font_desc='CustomFont 10'></span>   System updates</b>:FBTN" "bash -c 'yad --notebook --tab=\"System updates\" --form \
+            --field="<b><span font_desc='CustomFont 11'></span>   System updates</b>:FBTN" "bash -c 'yad --notebook --tab=\"System updates\" --form \
                 --columns=3 \
                 --image=\"$logo_path\" \
                 --image-on-top-center \
@@ -187,7 +188,7 @@ create_yad_dialog() {
             --field="Backup Your Hyprland:FBTN" "bash $backup_and_symlinks_script" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
             --field="<span foreground='white'> </span>                                        :LBL" "" \
-            --field="<span font_desc='CustomFont 10'></span>  Hide me forever ...:FBTN" "bash $kill_script" \
+            --field="<span foreground='white'></span>  Hide me forever ...:FBTN" "bash $kill_script" \
         --button-layout=end \
         --no-cancel \
         --no-focus \
