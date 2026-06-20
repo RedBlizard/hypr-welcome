@@ -27,7 +27,7 @@ read -n 1 -s
 alacritty -e bash -c "$symlink_removal_script" &
 
 # 4. Wait a moment to give the terminal time to open and prompt for sudo
-sleep 2
+sleep 12
 
 # 5. Relaunch the welcome app
 bash "$HOME/.config/hypr-welcome/scripts/hypr-welcome"
