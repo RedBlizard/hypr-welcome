@@ -11,7 +11,6 @@ echo ""
 echo -e "\033[1;33mRemoving legacy symlinks...\033[0m"
 echo ""
 
-# -v stands for verbose, so you see exactly what is being removed
 sudo rm -fv /usr/bin/hypr-welcome
 sudo rm -fv /usr/bin/hypr-eos-kill-yad-zombies
 sudo rm -fv /usr/bin/hypr_check_updates
@@ -25,9 +24,7 @@ read -n 1 -s
 '
 
 # 3. Launch Alacritty to run the removal script
-# We use '--hold' so the terminal stays open until you press a key. 
-# This gives you time to enter your sudo password and read the output.
-Alacritty --hold bash -c "$symlink_removal_script" &
+alacritty -e bash -c "$symlink_removal_script" &
 
 # 4. Wait a moment to give the terminal time to open and prompt for sudo
 sleep 2
