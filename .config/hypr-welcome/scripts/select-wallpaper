@@ -1,7 +1,7 @@
 #!/bin/bash
 # ==============================================================================
-# Select Wallpaper with Thumbnail Caching
-# Optimized for Wofi and Awww
+# Select Wallpaper (Integrated with hypr-welcome)
+# Uses pre-generated thumbnails from .cache/select-wallpaper
 # ==============================================================================
 
 # Directory for wallpapers
@@ -15,7 +15,7 @@ WOFI_CONFIG="$HOME/.config/wofi/dmenu-launcher/config"
 WOFI_STYLE="$HOME/.config/wofi/dmenu-launcher/style.css"
 
 mkdir -p "$CACHE_DIR"
-mkdir -p "$THUMB_DIR"
+# Note: THUMB_DIR creation removed as it uses pre-generated thumbnails
 
 # 1. Stop the random wallpaper loop if it's running in the background
 if pgrep -f "random-wallpaper" >/dev/null; then
@@ -35,21 +35,6 @@ echo "Starting awww-daemon at $(date)" >> "$CACHE_DIR/no_wallpaper_loop.log"
 awww-daemon & disown
 
 # ==============================================================================
-# Helper: Generate Thumbnail
-# ==============================================================================
-generate_thumbnail() {
-    local img="$1"
-    local thumb="$THUMB_DIR/$(basename "$img").png"
-    
-    # Generate ONLY if missing or if original is newer than thumbnail
-    if [[ ! -f "$thumb" || "$img" -nt "$thumb" ]]; then
-        # Use magick to resize and center-crop. [0] ensures we only take the first frame for gifs
-        magick "$img[0]" -thumbnail 400x250^ -gravity center -extent 400x250 "$thumb" 2>/dev/null
-    fi
-    echo "$thumb"
-}
-
-# ==============================================================================
 # Set Wallpaper Function
 # ==============================================================================
 set_wallpaper() {
@@ -61,12 +46,13 @@ set_wallpaper() {
 }
 
 # ==============================================================================
-# Select Wallpaper Function (with Thumbnails)
+# Select Wallpaper Function (Reads pre-generated thumbnails)
 # ==============================================================================
 select_wp() {
-    # Build the list with thumbnails
+    # Build the list using pre-generated thumbnails
     CHOICE=$(find "${DIR}" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.gif" \) | sort | while IFS= read -r f; do
-        thumb=$(generate_thumbnail "$f")
+        # Directly map to the existing thumbnail path in .cache/select-wallpaper
+        thumb="$THUMB_DIR/$(basename "$f").png"
         printf 'img:%s:text: \n' "$thumb"
     done | wofi --show dmenu \
     --conf "$WOFI_CONFIG" \
@@ -84,7 +70,6 @@ select_wp() {
     # The thumbnail is named "filename.ext.png". We need to find "filename.ext" in DIR.
     THUMB_BASENAME=$(basename "$THUMB_PATH")
     ORIGINAL_NAME="${THUMB_BASENAME%.png}"
-    
     FULLPATH="${DIR}/${ORIGINAL_NAME}"
 
     # Fallback check just in case
@@ -100,7 +85,6 @@ select_wp() {
 }
 
 # --- Main Execution Flow ---
-
 # Step 1: Kill yad (hypr-welcome) so it clears the screen for wofi
 pkill -f yad
 sleep 0.2 # Give it a fraction of a second to cleanly close
