@@ -1,14 +1,21 @@
 #!/bin/bash
+# ==============================================================================
+# Select Wallpaper with Thumbnail Caching
+# Optimized for Wofi and Awww
+# ==============================================================================
+
 # Directory for wallpapers
 DIR="$HOME/Pictures/wallpapers-redblizard/"
 CACHE_DIR="$HOME/.cache/awww"
 CURRENT_CACHE="$CACHE_DIR/current_wallpaper.png"
+THUMB_DIR="$HOME/.cache/select-wallpaper"
 
 # Wofi configuration paths for the wallpaper picker
 WOFI_CONFIG="$HOME/.config/wofi/dmenu-launcher/config"
 WOFI_STYLE="$HOME/.config/wofi/dmenu-launcher/style.css"
 
 mkdir -p "$CACHE_DIR"
+mkdir -p "$THUMB_DIR"
 
 # 1. Stop the random wallpaper loop if it's running in the background
 if pgrep -f "random-wallpaper" >/dev/null; then
@@ -27,37 +34,68 @@ fi
 echo "Starting awww-daemon at $(date)" >> "$CACHE_DIR/no_wallpaper_loop.log"
 awww-daemon & disown
 
+# ==============================================================================
+# Helper: Generate Thumbnail
+# ==============================================================================
+generate_thumbnail() {
+    local img="$1"
+    local thumb="$THUMB_DIR/$(basename "$img").png"
+    
+    # Generate ONLY if missing or if original is newer than thumbnail
+    if [[ ! -f "$thumb" || "$img" -nt "$thumb" ]]; then
+        # Use magick to resize and center-crop. [0] ensures we only take the first frame for gifs
+        magick "$img[0]" -thumbnail 400x250^ -gravity center -extent 400x250 "$thumb" 2>/dev/null
+    fi
+    echo "$thumb"
+}
+
+# ==============================================================================
+# Set Wallpaper Function
+# ==============================================================================
 set_wallpaper() {
     local img="$1"
     # Change wallpaper using awww with transition effects
     awww img "$img" --transition-step 20 --transition-fps=20
-    # Copy the selected wallpaper to cache for other tools (waybar, hyprlock, hypr-welcome)
+    # Copy the selected wallpaper to cache for other tools (waybar, hyprlock)
     cp "$img" "$CURRENT_CACHE"
 }
 
+# ==============================================================================
+# Select Wallpaper Function (with Thumbnails)
+# ==============================================================================
 select_wp() {
-    # TELEPORT TRICK: Move wofi to workspace 8 in the background.
-    # The 0.2s sleep ensures wofi has time to map its window before hyprctl moves it.
-    # We match the exact title to avoid moving other wofi instances (like the app launcher).
-    (sleep 0.2 && hyprctl dispatch movetoworkspacesilent 8, title:Select Wallpaper) &
-
-    # Wofi requires the specific 'img:<path>:text:<name>' syntax for dmenu icons
-    # We pass a single space for text so it only renders the thumbnails (no filenames)
+    # Build the list with thumbnails
     CHOICE=$(find "${DIR}" -type f \( -iname "*.jpg" -o -iname "*.png" -o -iname "*.gif" \) | sort | while IFS= read -r f; do
-        printf 'img:%s:text: \n' "$f"
+        thumb=$(generate_thumbnail "$f")
+        printf 'img:%s:text: \n' "$thumb"
     done | wofi --show dmenu \
-                 --conf "$WOFI_CONFIG" \
-                 --style "$WOFI_STYLE" \
-                 --prompt "Select Wallpaper" \
-                 --cache-file /dev/null)
+    --conf "$WOFI_CONFIG" \
+    --style "$WOFI_STYLE" \
+    --prompt "Select Wallpaper" \
+    --cache-file /dev/null)
 
+    # Exit if user cancelled
     [ -z "$CHOICE" ] && exit 0
 
-    # Extract the exact file path from the returned 'img:/path:text: ' string
-    FULLPATH=$(echo "$CHOICE" | sed 's/^img:\(.*\):text:.*$/\1/')
+    # Extract the thumbnail path from the returned 'img:/path:text: ' string
+    THUMB_PATH=$(echo "$CHOICE" | sed 's/^img:\(.*\):text:.*$/\1/')
+    
+    # Map thumbnail back to original file
+    # The thumbnail is named "filename.ext.png". We need to find "filename.ext" in DIR.
+    THUMB_BASENAME=$(basename "$THUMB_PATH")
+    ORIGINAL_NAME="${THUMB_BASENAME%.png}"
+    
+    FULLPATH="${DIR}/${ORIGINAL_NAME}"
 
-    if [ -f "$FULLPATH" ]; then
+    # Fallback check just in case
+    if [ ! -f "$FULLPATH" ]; then
+        FULLPATH=$(find "${DIR}" -name "$ORIGINAL_NAME" | head -1)
+    fi
+
+    if [ -n "$FULLPATH" ] && [ -f "$FULLPATH" ]; then
         set_wallpaper "$FULLPATH"
+    else
+        echo "Error: Could not find original file for $ORIGINAL_NAME"
     fi
 }
 
